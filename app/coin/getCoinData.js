@@ -14,6 +14,5 @@ export default async function getCoinData(coinId) {
     .then((response) => response.text())
     .catch((error) => console.log("error", error));
 
-  console.log(JSON.parse(data).name);
   return data;
 }

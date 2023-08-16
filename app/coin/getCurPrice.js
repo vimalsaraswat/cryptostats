@@ -15,6 +15,6 @@ export default async function getCurPrice(coinId, currency = "usd") {
     .then((response) => response.text())
     .then((price) => JSON.parse(price)[coinId][currency])
     .catch((error) => console.log("error", error));
-  console.log(price);
+
   return price;
 }
