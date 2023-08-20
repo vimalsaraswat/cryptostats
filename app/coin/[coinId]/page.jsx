@@ -35,32 +35,47 @@ export default function first({ params }) {
   else
     return (
       <main className=" grid gap-4 place-items-center">
-        <section className="w-11/12">
-          <div className="flex justify-between">
-            <h2>{coinData.name}</h2>
-            <div className=" w-1/3 flex justify-between">
-              <span>{currencyFormat(price)}</span>
-
-              <span>{coinData.market_data.price_change_percentage_24h}</span>
-            </div>
-          </div>
-          <div className="flex justify-between">
-            <h3>{coinData.symbol.toUpperCase()}</h3>
-            <div className=" w-1/3 flex justify-between">
-              <span>
-                <p className="text-xs opacity-60">24h High</p>
-                {currencyFormat(coinData.market_data.high_24h.usd)}
-              </span>
-              <span>
-                <p className="text-xs opacity-60">24h Low</p>
-                {currencyFormat(coinData.market_data.low_24h.usd)}
-              </span>
-            </div>
-          </div>
-          <TokenChart coinId={coin} />
-        </section>
+        <Hero
+          price={price}
+          symbol={coinData.symbol}
+          priceChange24h={coinData.market_data.price_change_percentage_24h}
+          high24h={coinData.market_data.high_24h.usd}
+          low24h={coinData.market_data.low_24h.usd}
+        />
+        <TokenChart coinId={coin} />
       </main>
     );
+}
+
+function Hero({ price, symbol, priceChange24h, high24h, low24h }) {
+  return (
+    <section className="w-11/12 flex justify-between">
+      <div className="w-4/10">
+        <span className="text-4xl">{currencyFormat(price)}</span>
+        <div className="flex gap-2">
+          <h2>{symbol.toUpperCase()}</h2>
+          <span
+            className={`text-2xl ${
+              priceChange24h > 0 ? "text-[#00ff00]" : "text-[#ff00ff]"
+            }`}
+          >
+            {priceChange24h}%
+          </span>
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-2 justify-between">
+        <span>
+          <p className="text-xs opacity-60">24h High</p>
+          {currencyFormat(high24h)}
+        </span>
+        <span>
+          <p className="text-xs opacity-60">24h Low</p>
+          {currencyFormat(low24h)}
+        </span>
+      </div>
+    </section>
+  );
 }
 
 function currencyFormat(value) {
@@ -112,4 +127,34 @@ function TokenChart({ coinId }) {
         <PriceChart data={chartData} />
       </div>
     );
+}
+
+function AboutToken(coinData) {
+  return (
+    <section id="about">
+      <p>{coinData.description.en}</p>
+      <table>
+        <tr>
+          <td>Circulating Supply:</td>
+          <td>{coinData.market_data.circulating_supply}</td>
+        </tr>
+        <tr>
+          <td>Total Supply:</td>
+          <td>{coinData.market_data.total_supply}</td>
+        </tr>
+        <tr>
+          <td>All-Time High Price:</td>
+          <td>{currencyFormat(coinData.market_data.ath.usd)}</td>
+        </tr>
+        <tr>
+          <td>All-Time Low Price:</td>
+          <td>{currencyFormat(coinData.market_data.atl.usd)}</td>
+        </tr>
+        <tr>
+          <td>Market Cap:</td>
+          <td>{currencyFormat(coinData.market_data.market_cap.usd)}</td>
+        </tr>
+      </table>
+    </section>
+  );
 }
