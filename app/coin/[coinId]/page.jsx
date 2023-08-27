@@ -1,10 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { currencyFormat } from "@/app/helpers";
 import { getCurPrice, getCoinData, getCoinChartData } from "@/app/coin";
 import PriceChart from "@/components/priceChart";
 
-export default function first({ params }) {
+export default function Coin({ params }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [price, setPrice] = useState(null);
@@ -43,6 +44,7 @@ export default function first({ params }) {
           low24h={coinData.market_data.low_24h.usd}
         />
         <TokenChart coinId={coin} />
+        <AboutToken coinData={coinData} />
       </main>
     );
 }
@@ -78,24 +80,6 @@ function Hero({ price, symbol, priceChange24h, high24h, low24h }) {
   );
 }
 
-function currencyFormat(value) {
-  if (value >= 0) {
-    let USDollar = new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-    });
-    return USDollar.format(value);
-  } else {
-    return (
-      "$" +
-      value
-        .toFixed(20)
-        .toString()
-        .replace(/\.?0+$/, "")
-    );
-  }
-}
-
 function TokenChart({ coinId }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -122,39 +106,41 @@ function TokenChart({ coinId }) {
     );
   else
     return (
-      <div>
+      <div className="w-10/12">
         <h2 className="sr-only">Token Price Chart</h2>
-        <PriceChart data={chartData} />
+        <div className="bg-[#c6edfb0a]">
+          <PriceChart data={chartData} />
+        </div>
       </div>
     );
 }
 
-function AboutToken(coinData) {
+function AboutToken({ coinData }) {
   return (
     <section id="about">
       <p>{coinData.description.en}</p>
-      <table>
-        <tr>
-          <td>Circulating Supply:</td>
-          <td>{coinData.market_data.circulating_supply}</td>
-        </tr>
-        <tr>
-          <td>Total Supply:</td>
-          <td>{coinData.market_data.total_supply}</td>
-        </tr>
-        <tr>
-          <td>All-Time High Price:</td>
-          <td>{currencyFormat(coinData.market_data.ath.usd)}</td>
-        </tr>
-        <tr>
-          <td>All-Time Low Price:</td>
-          <td>{currencyFormat(coinData.market_data.atl.usd)}</td>
-        </tr>
-        <tr>
-          <td>Market Cap:</td>
-          <td>{currencyFormat(coinData.market_data.market_cap.usd)}</td>
-        </tr>
-      </table>
+      <ul>
+        <li>
+          <span>Circulating Supply:</span>
+          <span>{coinData.market_data.circulating_supply}</span>
+        </li>
+        <li>
+          <span>Total Supply:</span>
+          <span>{coinData.market_data.total_supply}</span>
+        </li>
+        <li>
+          <span>All-Time High Price:</span>
+          <span>{currencyFormat(coinData.market_data.ath.usd)}</span>
+        </li>
+        <li>
+          <span>All-Time Low Price:</span>
+          <span>{currencyFormat(coinData.market_data.atl.usd)}</span>
+        </li>
+        <li>
+          <span>Market Cap:</span>
+          <span>{currencyFormat(coinData.market_data.market_cap.usd)}</span>
+        </li>
+      </ul>
     </section>
   );
 }
