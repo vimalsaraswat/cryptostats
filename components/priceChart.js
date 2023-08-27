@@ -1,5 +1,6 @@
 "use client";
 
+import { currencyFormat } from "@/app/helpers";
 import "chartjs-adapter-luxon";
 import {
   Chart as ChartJS,
@@ -43,8 +44,9 @@ const PriceChart = ({ data }) => {
         type: "time",
         time: {
           unit: "minute",
-          tooltipFormat: "HH:mm",
+          tooltipFormat: "t",
         },
+        ticks: { display: false },
         title: {
           display: false,
           text: "Date",
@@ -55,16 +57,32 @@ const PriceChart = ({ data }) => {
           display: false,
           text: "Price",
         },
+        position: "right",
         ticks: {
-          callback: function (value) {
-            return "$" + value;
-          },
+          callback: currencyFormat,
         },
       },
     },
     plugins: {
       legend: {
         display: false, // Set this to false to hide the legend
+      },
+      tooltip: {
+        yAlign: "bottom",
+        displayColors: false,
+        callbacks: {
+          label: function (context) {
+            let label = "";
+
+            if (label) {
+              label += ": ";
+            }
+            if (context.parsed.y !== null) {
+              label += currencyFormat(context.parsed.y);
+            }
+            return label;
+          },
+        },
       },
     },
   };
