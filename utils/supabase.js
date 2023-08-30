@@ -14,10 +14,23 @@ export async function initSupabase(req) {
   const accessToken = req.cookies.get("my-access-token")?.value;
 
   // Updating user's auth session
-  await supabase.auth.setSession({
-    refresh_token: refreshToken,
-    access_token: accessToken,
-  });
+  if (refreshToken && accessToken) {
+    await supabase.auth.setSession({
+      refresh_token: refreshToken,
+      access_token: accessToken,
+      auth: { persistSession: false },
+    });
+  }
 
   return supabase;
+}
+
+export async function getUser(req) {
+  const supabase = await initSupabase(req);
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (user) return user;
 }
