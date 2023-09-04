@@ -9,17 +9,21 @@ export async function initSupabase(req) {
     auth: { persistSession: false },
   });
 
-  // Getting auth-tokens from cookies
-  const refreshToken = req.cookies.get("my-refresh-token")?.value;
-  const accessToken = req.cookies.get("my-access-token")?.value;
+  const { session, error } = await supabase.auth.getSession();
 
-  // Updating user's auth session
-  if (refreshToken && accessToken) {
-    await supabase.auth.setSession({
-      refresh_token: refreshToken,
-      access_token: accessToken,
-      auth: { persistSession: false },
-    });
+  if (!session) {
+    // Getting auth-tokens from cookies
+    const refreshToken = req.cookies.get("my-refresh-token")?.value;
+    const accessToken = req.cookies.get("my-access-token")?.value;
+
+    // Updating user's auth session
+    if (refreshToken && accessToken) {
+      await supabase.auth.setSession({
+        refresh_token: refreshToken,
+        access_token: accessToken,
+        auth: { persistSession: false },
+      });
+    }
   }
 
   return supabase;
