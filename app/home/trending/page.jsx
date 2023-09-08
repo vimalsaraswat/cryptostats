@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { btcExchangeRates } from "@/app/coin";
 import { currencyFormat } from "@/app/helpers";
 import getTrendingCoins from "./getTrendingCoins";
@@ -28,7 +29,7 @@ export default function Trending() {
 
   if (loading)
     return (
-      <div class="text-center">
+      <div className="text-center">
         <div role="status">
           <svg
             aria-hidden="true"
@@ -83,7 +84,17 @@ export default function Trending() {
                   }
                 >
                   <td className="px-6 py-4 w-4/10 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    <Link href={`/coin/${coin.item.id}`}>{coin.item.name}</Link>
+                    <Link
+                      className="flex items-center"
+                      href={`/coin/${coin.item.id}`}
+                    >
+                      <img
+                        className="h-10 w-10 rounded"
+                        src={coin.item.small}
+                        alt={`${coin.item.name}`}
+                      />
+                      <span>{coin.item.name}</span>
+                    </Link>
                   </td>
                   <td className="px-6 py-4">
                     {currencyFormat(btcExchangeRate * coin.item.price_btc)}

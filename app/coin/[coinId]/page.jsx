@@ -116,9 +116,16 @@ function TokenChart({ coinId }) {
 }
 
 function AboutToken({ coinData }) {
+  const [descOpen, setDescOpen] = useState(false);
   return (
-    <section id="about">
-      <p>{coinData.description.en}</p>
+    <section id="about" className="flex flex-col gap-4">
+      <p
+        onClick={() => (descOpen ? "" : setDescOpen(true))}
+        className={descOpen ? "" : "line-clamp-3"}
+      >
+        {coinData.description.en}
+      </p>
+
       <ul>
         <li>
           <span>Circulating Supply:</span>

@@ -35,15 +35,15 @@ export default function Home() {
   else
     return (
       <main className="w-10/12 max-w-2xl mx-auto">
-        <section id="hero" class="flex items-center space-x-4 m-4">
+        <section id="hero" className="flex items-center space-x-4 m-4">
           <img
-            class="w-10 h-10 rounded-full"
+            className="w-10 h-10 rounded-full"
             src="https://source.boringavatars.com/"
             alt=""
           />
-          <div class="font-medium dark:text-white">
+          <div className="font-medium dark:text-white">
             <h2>{userData.user_data.username}</h2>
-            <div class="text-sm text-gray-500 dark:text-gray-400">
+            <div className="text-sm text-gray-500 dark:text-gray-400">
               {currencyFormat(userData.user_data.cash)}
             </div>
           </div>
@@ -113,7 +113,7 @@ function Tokens({ tokens }) {
       className="relative overflow-x-auto shadow-md rounded-sm sm:rounded-lg"
     >
       <h3 className="text-2xl text-[#b0ccda]">Your Tokens:</h3>
-      <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+      <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
             <th scope="col" className="px-6 py-3">
@@ -153,16 +153,16 @@ function Tokens({ tokens }) {
                       {token.id.toUpperCase()}
                     </Link>
                   </th>
-                  <td class="px-6 py-4 hidden sm:block">
+                  <td className="px-6 py-4 hidden sm:block">
                     {currencyFormat(token.price)}
                   </td>
-                  <td class="px-6 py-4">{token.quantity}</td>
+                  <td className="px-6 py-4">{token.quantity}</td>
 
-                  <td class="px-6 py-4">{currencyFormat(token.value)}</td>
-                  <td class="px-6 py-4 hidden sm:block">
+                  <td className="px-6 py-4">{currencyFormat(token.value)}</td>
+                  <td className="px-6 py-4 hidden sm:block">
                     <a
                       href="#"
-                      class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                      className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                     >
                       Edit
                     </a>
