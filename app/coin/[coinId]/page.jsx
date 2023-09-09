@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { currencyFormat } from "@/app/helpers";
+import { currencyFormat } from "@/helpers";
 import { getCurPrice, getCoinData, getCoinChartData } from "@/app/coin";
 import PriceChart from "@/components/priceChart";
 

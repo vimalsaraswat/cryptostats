@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { currencyFormat } from "@/app/helpers";
+import { currencyFormat } from "@/helpers";
 import { getCurPrice } from "@/app/coin";
 
 export default function Buy() {

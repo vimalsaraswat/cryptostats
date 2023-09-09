@@ -1,6 +1,6 @@
 "use client";
 
-import { currencyFormat } from "@/app/helpers";
+import { currencyFormat } from "@/helpers";
 import "chartjs-adapter-luxon";
 import {
   Chart as ChartJS,

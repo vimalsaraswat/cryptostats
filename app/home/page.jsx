@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { currencyFormat } from "../helpers";
+import { currencyFormat } from "../../helpers";
 import { getCurPrice } from "@/app/coin";
 
 export default function Home() {

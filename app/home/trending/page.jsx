@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { btcExchangeRates } from "@/app/coin";
-import { currencyFormat } from "@/app/helpers";
+import { currencyFormat } from "@/helpers";
 import getTrendingCoins from "./getTrendingCoins";
 
 export default function Trending() {
