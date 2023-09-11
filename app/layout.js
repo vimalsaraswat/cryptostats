@@ -14,7 +14,9 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={`${inter.className} h-screen w-screen flex flex-col`}>
         <Header />
-        {children}
+        <main className="grow flex flex-col items-center justify-center">
+          {children}
+        </main>
       </body>
     </html>
   );
