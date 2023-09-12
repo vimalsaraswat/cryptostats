@@ -35,17 +35,24 @@ export default function Coin({ params }) {
     );
   else
     return (
-      <main className=" grid gap-4 place-items-center">
-        <Hero
-          price={price}
-          symbol={coinData.symbol}
-          priceChange24h={coinData.market_data.price_change_percentage_24h}
-          high24h={coinData.market_data.high_24h.usd}
-          low24h={coinData.market_data.low_24h.usd}
-        />
-        <TokenChart coinId={coin} />
-        <AboutToken coinData={coinData} />
-      </main>
+      <>
+        {price ? (
+          <>
+            <h2></h2>
+            <Hero
+              price={price}
+              symbol={coinData.symbol}
+              priceChange24h={coinData.market_data.price_change_percentage_24h}
+              high24h={coinData.market_data.high_24h.usd}
+              low24h={coinData.market_data.low_24h.usd}
+            />
+            <TokenChart coinId={coin} />
+            <AboutToken coinData={coinData} />
+          </>
+        ) : (
+          <p className="text-2xl">Coin does't Exist!</p>
+        )}
+      </>
     );
 }
 
