@@ -44,15 +44,17 @@ export default function Trending() {
     );
   else
     return (
-      <main className="md:w-10/12 w-11/12 mx-auto">
+      <>
         <h2 className="mb-4 text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400 md:text-5xl lg:text-6xl">
           Trending
         </h2>
-        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 rounded-md">
+        <table className="w-10/12 max-w-5xl mx-4 text-sm text-left text-gray-500 dark:text-gray-400 rounded-md">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
-              <th className="px-6 py-3">Name</th>
+              <th className="px-6 py-3">Coins</th>
+              <th className="px-6 py-3">Symbol</th>
               <th className="px-6 py-3">Price</th>
+              <th className="hidden sm:block px-6 py-3">Market Cap Rank</th>
             </tr>
           </thead>
           <tbody className="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
@@ -68,7 +70,7 @@ export default function Trending() {
                 >
                   <td className="px-6 py-4 w-4/10 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                     <Link
-                      className="flex items-center"
+                      className="flex gap-2 items-center"
                       href={`/coin/${coin.item.id}`}
                     >
                       <img
@@ -79,14 +81,18 @@ export default function Trending() {
                       <span>{coin.item.name}</span>
                     </Link>
                   </td>
+                  <td className="px-6 py-4">{coin.item.symbol}</td>
                   <td className="px-6 py-4">
                     {currencyFormat(btcExchangeRate * coin.item.price_btc)}
+                  </td>
+                  <td className="hidden sm:block px-6 py-4">
+                    {coin.item.market_cap_rank}
                   </td>
                 </tr>
               );
             })}
           </tbody>
         </table>
-      </main>
+      </>
     );
 }
