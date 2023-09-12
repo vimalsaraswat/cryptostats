@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { currencyFormat } from "@/helpers";
 import { getCurPrice, getCoinData, getCoinChartData } from "@/app/coin";
 import PriceChart from "@/components/priceChart";
+import Loading from "@/components/loading";
 
 export default function Coin({ params }) {
   const [loading, setLoading] = useState(true);
@@ -24,7 +25,13 @@ export default function Coin({ params }) {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) return <main>Loading....</main>;
+  if (loading)
+    return (
+      <>
+        <Loading type="large" />
+        <span className="sr-only">Loading</span>
+      </>
+    );
   else if (error)
     return (
       <main>
@@ -102,7 +109,13 @@ function TokenChart({ coinId }) {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) return <main>Loading....</main>;
+  if (loading)
+    return (
+      <>
+        <Loading />
+        <span className="sr-only">Loading</span>
+      </>
+    );
   else if (error)
     return (
       <main>

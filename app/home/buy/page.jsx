@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { currencyFormat } from "@/helpers";
 import { getCurPrice } from "@/app/coin";
+import Loading from "@/components/loading";
 
 export default function Buy() {
   const [loading, setLoading] = useState(false);
@@ -48,7 +49,13 @@ export default function Buy() {
     setLoading(false);
   };
 
-  if (loading) return <main>Loading....</main>;
+  if (loading)
+    return (
+      <>
+        <Loading type="large" />
+        <span className="sr-only">Loading</span>
+      </>
+    );
   else if (error)
     return (
       <main>
@@ -151,7 +158,10 @@ function ConfirmBuy(props) {
         {props.coinId} at {currencyFormat(props.quantity * props.price)}.
       </article>
       {loading ? (
-        <main>Loading....</main>
+        <>
+          <Loading />
+          <span className="sr-only">Loading</span>
+        </>
       ) : error ? (
         <main>
           Something went wrong,

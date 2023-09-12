@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { currencyFormat } from "../../helpers";
 import { getCurPrice } from "@/app/coin";
+import Loading from "@/components/loading";
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
@@ -23,7 +24,13 @@ export default function Home() {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) return <main>Loading....</main>;
+  if (loading)
+    return (
+      <>
+        <Loading type="large" />
+        <span className="sr-only">Loading</span>
+      </>
+    );
   else if (error)
     return (
       <main>
@@ -34,7 +41,7 @@ export default function Home() {
     );
   else
     return (
-      <main className="w-10/12 max-w-2xl mx-auto">
+      <>
         <section id="hero" className="flex items-center space-x-4 m-4">
           <img
             className="w-10 h-10 rounded-full"
@@ -49,7 +56,7 @@ export default function Home() {
           </div>
         </section>
         <Tokens tokens={userData.tokens} />
-      </main>
+      </>
     );
 }
 
@@ -97,7 +104,13 @@ function Tokens({ tokens }) {
     fetchTokenPrices();
   }, []);
 
-  if (loading) return <main>Loading....</main>;
+  if (loading)
+    return (
+      <>
+        <Loading />
+        <span className="sr-only">Loading</span>
+      </>
+    );
   else if (error)
     return (
       <main>
