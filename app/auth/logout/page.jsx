@@ -15,7 +15,7 @@ export default function Login() {
   };
 
   return (
-    <div className="h-screen w-screen flex items-center justify-center">
+    <div className="h-full w-full flex items-center justify-center">
       <div className="max-w-2xl mx-auto">
         <p className="block mb-6 text-sm font-medium text-gray-900 dark:text-white">
           Are you sure you want to Logout?
