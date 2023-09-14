@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import searchCoin from "./searchCoin";
+import Loading from "@/components/loading";
 
 export default function Search() {
   const [loading, setLoading] = useState(false);
@@ -40,12 +41,9 @@ export default function Search() {
       })
       .finally(() => setLoading(false));
     setShowResults(true);
-
-    console.table(searchResults);
   };
 
-  if (loading) return <main>Loading....</main>;
-  else if (error)
+  if (error)
     return (
       <main>
         Something went wrong,
@@ -90,13 +88,20 @@ export default function Search() {
             className="block w-full p-2 px-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Search..."
           />
-          <button
-            onClick={handleSearch}
-            type="submit"
-            className="hidden sm:block text-white absolute right-0.5 inset-y-0 h-8 my-auto bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          >
-            Search
-          </button>
+          {loading ? (
+            <div className="absolute right-0.5 inset-y-0 h-8 my-auto px-4">
+              <Loading />
+              <span className="sr-only">Loading</span>
+            </div>
+          ) : (
+            <button
+              onClick={handleSearch}
+              type="submit"
+              className="hidden sm:block text-white absolute right-0.5 inset-y-0 h-8 my-auto bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            >
+              Search
+            </button>
+          )}
         </div>
         {showResults && (
           <div
@@ -107,9 +112,8 @@ export default function Search() {
             {searchResults.length > 0 ? (
               <ul className="absolute top-0 left-0 h-60 overflow-y-scroll flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50  dark:bg-gray-800 dark:border-gray-700">
                 {searchResults.map((result, i) => {
-                  console.log(result, i);
                   return (
-                    <li className="pb-3 sm:pb-4">
+                    <li key={i} className="pb-3 sm:pb-4">
                       <Link
                         href={`/coin/${result.id}`}
                         className="flex items-center space-x-4"
