@@ -27,10 +27,15 @@ export async function POST(req) {
         { message: `User registered successfully!` },
         { status: 200 }
       );
+    } else {
+      return NextResponse.json({
+        message: "Unable to register, please try again!",
+        status: 400,
+      });
     }
   } else {
     return NextResponse.json(
-      { message: `Unable to register nw user!` },
+      { message: `This email is already registered, please try to login!` },
       {
         status: 400,
       }
