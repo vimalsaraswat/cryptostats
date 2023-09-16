@@ -91,6 +91,7 @@ export default function Buy() {
                 name="token"
                 placeholder="Symbol"
                 type="text"
+                required
               />
             </fieldset>
             <fieldset className="mb-6">
@@ -108,6 +109,8 @@ export default function Buy() {
                 name="coins"
                 placeholder="Quantity"
                 type="number"
+                min={1e-8}
+                required
               />
             </fieldset>
             {price && quantity && <p>Amount:{currencyFormat(amount)}</p>}
