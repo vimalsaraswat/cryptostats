@@ -1,8 +1,11 @@
 import { initSupabase } from "@/utils/supabase";
 import { NextResponse } from "next/server";
 
-export async function GET(req) {
-  const supabase = await initSupabase(req);
+// Revalidate user data every 10 seconds
+export const revalidate = 10;
+
+export async function GET(request) {
+  const supabase = await initSupabase(request);
 
   let { data: user_data, error: userDataError } = await supabase
     .from("user_data")
@@ -12,8 +15,8 @@ export async function GET(req) {
     .from("transactions")
     .select("coinId,quantity");
 
-  // Creating list of token-names and their respective total quantities
   if (transactions) {
+    // Creating list of token-names and their respective total quantities
     let tokens = Object.values(
       transactions.reduce((acc, item) => {
         acc[item.coinId] = acc[item.coinId]
