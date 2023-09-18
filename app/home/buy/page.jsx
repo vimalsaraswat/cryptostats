@@ -10,6 +10,7 @@ import Toast from "@/components/ui/Toast";
 export default function Buy() {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+
   const [showConfirmation, setShowConfirmation] = useState(false);
 
   const [coinId, setCoinId] = useState("");
@@ -30,7 +31,6 @@ export default function Buy() {
         .then((value) => setPrice(value))
         .catch((error) => {
           console.error(error);
-          setError(true);
         });
     }
   }, [coinId]);
@@ -42,7 +42,6 @@ export default function Buy() {
       .then((value) => setPrice(value))
       .catch((error) => {
         console.error(error);
-        setError(true);
       })
       .finally(() => {
         setLoading(false);
@@ -58,7 +57,15 @@ export default function Buy() {
   };
 
   if (showConfirmation) {
-    return <ConfirmBuy coinId={coinId} quantity={quantity} price={price} />;
+    return (
+      <ConfirmBuy
+        coinId={coinId}
+        quantity={quantity}
+        price={price}
+        setShowConfirmation={setShowConfirmation}
+        setErrorMsg={setErrorMsg}
+      />
+    );
   }
 
   if (loading)
@@ -86,7 +93,6 @@ export default function Buy() {
             <input
               onChange={(e) => {
                 setCoinId(e.target.value);
-                console.log(coinId);
               }}
               value={coinId}
               autoFocus
@@ -151,7 +157,8 @@ function ConfirmBuy(props) {
   const handleConfirmBuy = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const user = {
+
+    const buy = {
       coinId: props.coinId,
       price: props.price,
       quantity: props.quantity,
@@ -161,13 +168,16 @@ function ConfirmBuy(props) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(user),
+      body: JSON.stringify(buy),
     })
-      .catch((error) => setError(true))
+      .then((result) => result.json())
       .finally(() => setLoading(false));
 
     if (response.ok) {
       router.push("/home");
+    } else {
+      props.setErrorMsg(response.message);
+      props.setShowConfirmation(false);
     }
   };
   return (
