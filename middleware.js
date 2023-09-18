@@ -3,16 +3,14 @@ import { getUser } from "./utils/supabase";
 
 export default async function middleware(request) {
   const user = await getUser(request);
+  const url = request.nextUrl.pathname;
 
   if (user) {
-    if (request.nextUrl.pathname.startsWith("/auth/login")) {
+    if (url.startsWith("/auth/login") || url.startsWith("/auth/register")) {
       return NextResponse.redirect(new URL("/home", request.url));
     }
   } else if (!user) {
-    if (
-      request.nextUrl.pathname.startsWith("/home") ||
-      request.nextUrl.pathname.startsWith("/auth/logout")
-    )
+    if (url.startsWith("/home") || url.startsWith("/auth/logout"))
       return NextResponse.redirect(new URL("/auth/login", request.url));
   }
 }
