@@ -41,7 +41,6 @@ export default function Sell() {
       .then((value) => setPrice(value))
       .catch((error) => {
         console.error(error);
-        setError(true);
       })
       .finally(() => {
         setLoading(false);
@@ -188,12 +187,6 @@ function ConfirmSell(props) {
           <Loading />
           <span className="sr-only">Loading</span>
         </>
-      ) : error ? (
-        <main>
-          Something went wrong,
-          <br />
-          Try refreshing after some time.
-        </main>
       ) : (
         <button
           type="submit"

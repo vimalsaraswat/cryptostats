@@ -152,7 +152,6 @@ function ConfirmBuy(props) {
   const router = useRouter();
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
 
   const handleConfirmBuy = async (e) => {
     e.preventDefault();
@@ -191,12 +190,6 @@ function ConfirmBuy(props) {
           <Loading />
           <span className="sr-only">Loading</span>
         </>
-      ) : error ? (
-        <main>
-          Something went wrong,
-          <br />
-          Try refreshing after some time.
-        </main>
       ) : (
         <button
           type="submit"
