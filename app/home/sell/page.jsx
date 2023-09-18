@@ -57,7 +57,15 @@ export default function Sell() {
   };
 
   if (showConfirmation) {
-    return <ConfirmBuy coinId={coinId} quantity={quantity} price={price} />;
+    return (
+      <ConfirmSell
+        coinId={coinId}
+        quantity={quantity}
+        price={price}
+        setShowConfirmation={setShowConfirmation}
+        setErrorMsg={setErrorMsg}
+      />
+    );
   }
 
   if (loading)
@@ -142,12 +150,12 @@ function ConfirmSell(props) {
   const router = useRouter();
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
 
   const handleConfirmSell = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const user = {
+
+    const sell = {
       coinId: props.coinId,
       price: props.price,
       quantity: props.quantity,
@@ -157,13 +165,16 @@ function ConfirmSell(props) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(user),
+      body: JSON.stringify(sell),
     })
-      .catch((error) => setError(true))
+      .then((result) => result.json())
       .finally(() => setLoading(false));
 
     if (response.ok) {
       router.push("/home");
+    } else {
+      props.setErrorMsg(response.message);
+      props.setShowConfirmation(false);
     }
   };
   return (
