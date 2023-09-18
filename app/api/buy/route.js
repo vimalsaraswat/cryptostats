@@ -9,7 +9,7 @@ export async function POST(req) {
   const userId = (await getUser(req)).id;
   let { data: cash } = await supabase.from("user_data").select("cash");
 
-  if (cash[0].cash > amount) {
+  if (cash[0].cash < amount) {
     return NextResponse.json(
       { message: `Insufficient cash balance!` },
       {
