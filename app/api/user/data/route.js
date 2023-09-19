@@ -1,40 +1,39 @@
 import { initSupabase } from "@/utils/supabase";
 import { NextResponse } from "next/server";
 
-// Revalidate user data every 10 seconds
-export const revalidate = 10;
+export const revalidate = 0;
 
 export async function GET(request) {
   const supabase = await initSupabase(request);
 
-  let { data: user_data, error: userDataError } = await supabase
-    .from("user_data")
-    .select("*");
+  const results = await Promise.allSettled([
+    supabase.from("user_data").select("*"),
+    supabase.from("transactions").select("coinId,quantity"),
+  ]);
 
-  let { data: transactions, error: transactionsError } = await supabase
-    .from("transactions")
-    .select("coinId,quantity");
+  results.forEach((res) => {
+    if (!res.status === "fulfilled") {
+      return NextResponse.json(
+        { message: `Unable to get user data!` },
+        { status: 400 }
+      );
+    }
+  });
 
-  if (transactions) {
-    // Creating list of token-names and their respective total quantities
-    let tokens = Object.values(
-      transactions.reduce((acc, item) => {
-        acc[item.coinId] = acc[item.coinId]
-          ? { ...item, quantity: item.quantity + acc[item.coinId].quantity }
-          : item;
-        return acc;
-      }, {})
-    );
-    return NextResponse.json(
-      { data: { user_data: user_data[0], tokens: tokens } },
-      { status: 200 }
-    );
-  } else {
-    return NextResponse.json(
-      { message: `Unable to login` },
-      {
-        status: 400,
-      }
-    );
-  }
+  const user_data = results[0].value.data;
+  const transactions = results[1].value.data;
+
+  const tokens = Object.values(
+    transactions.reduce((acc, item) => {
+      acc[item.coinId] = acc[item.coinId]
+        ? { ...item, quantity: item.quantity + acc[item.coinId].quantity }
+        : item;
+      return acc;
+    }, {})
+  );
+
+  return NextResponse.json(
+    { data: { user_data: user_data[0], tokens: tokens } },
+    { status: 200 }
+  );
 }
