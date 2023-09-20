@@ -2,15 +2,22 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import Toast from "@/components/ui/Toast";
+import Loading from "@/components/loading";
 
 export default function Login() {
   const router = useRouter();
+
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogIn = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     const user = {
       email: email,
@@ -22,21 +29,23 @@ export default function Login() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(user),
-    });
+    }).finally(() => setLoading(false));
+
     if (response.ok) {
       setEmail("");
       setPassword("");
-
       router.push("/home");
+    } else {
+      setErrorMsg((await response.json()).message || "Something went wrong!");
     }
   };
 
   return (
-    <div className="h-full w-full flex items-center justify-center">
+    <>
       <form
         onSubmit={handleLogIn}
         autoComplete="off"
-        className="max-w-2xl mx-auto"
+        className="max-w-2xl flex flex-col items-center"
       >
         <fieldset className="mb-6">
           <label
@@ -70,13 +79,33 @@ export default function Login() {
             required
           />
         </fieldset>
-        <button
-          type="submit"
-          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-        >
-          Submit
-        </button>
+        {loading ? (
+          <Loading />
+        ) : (
+          <button
+            type="submit"
+            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          >
+            LogIn
+          </button>
+        )}
       </form>
-    </div>
+      <p className="flex flex-col my-4">
+        <span>Don't have an account?</span>
+        <Link
+          href={"/auth/login"}
+          className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+        >
+          Register now
+        </Link>
+      </p>
+      {errorMsg && (
+        <Toast
+          type="error"
+          message={errorMsg}
+          onRemove={() => setErrorMsg("")}
+        />
+      )}
+    </>
   );
 }
