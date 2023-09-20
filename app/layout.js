@@ -20,7 +20,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={`${inter.className} h-screen w-screen flex flex-col`}>
         <Header userLoggedIn={userLoggedIn} />
-        <main className="grow flex flex-col items-center justify-center">
+        <main className="grow flex flex-col items-center justify-center bg-zinc-900 text-stone-300">
           {children}
         </main>
       </body>
