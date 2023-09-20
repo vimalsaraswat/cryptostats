@@ -5,18 +5,18 @@ import Search from "@/app/home/search";
 import Logo from "@/components/logo";
 import NavItems from "./navItems";
 
-export default function header() {
+export default function header({ userLoggedIn }) {
   return (
     <header className="bg-white max-w-screen dark:bg-gray-900 w-full border-b border-gray-200 dark:border-gray-600">
       <div className="max-w-screen-xl flex flex-wrap gap-x-4 sm:gap-y-4 items-center justify-between sm:justify-evenly lg:justify-between mx-auto p-4">
         <Logo />
-        <Nav />
+        <Nav userLoggedIn={userLoggedIn} />
       </div>
     </header>
   );
 }
 
-function Nav() {
+function Nav({ userLoggedIn }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
 
@@ -33,7 +33,7 @@ function Nav() {
       <div
         className={`${!menuOpen && "hidden"} order-4 lg:block w-full sm:w-auto`}
       >
-        <NavItems />
+        <NavItems userLoggedIn={userLoggedIn} />
       </div>
     </>
   );

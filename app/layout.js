@@ -1,5 +1,6 @@
 import "./globals.css";
 import { Inter } from "next/font/google";
+import { cookies } from "next/headers";
 import Header from "@/components/header";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -10,10 +11,15 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+  let userLoggedIn = false;
+  if (cookies().get("my-refresh-token")) {
+    userLoggedIn = true;
+  }
+
   return (
     <html lang="en">
       <body className={`${inter.className} h-screen w-screen flex flex-col`}>
-        <Header />
+        <Header userLoggedIn={userLoggedIn} />
         <main className="grow flex flex-col items-center justify-center">
           {children}
         </main>
