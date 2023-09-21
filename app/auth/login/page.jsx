@@ -3,15 +3,14 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import Toast from "@/components/ui/Toast";
 import Loading from "@/components/loading";
+import { useToast } from "@/utils/ToastContext";
 
 export default function Login() {
   const router = useRouter();
+  const { addToast } = useToast();
 
   const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -32,11 +31,13 @@ export default function Login() {
     }).finally(() => setLoading(false));
 
     if (response.ok) {
-      setEmail("");
-      setPassword("");
+      addToast("success", "Welcome my friend, welcome!", 10);
       router.push("/home");
     } else {
-      setErrorMsg((await response.json()).message || "Something went wrong!");
+      addToast(
+        "error",
+        (await response.json()).message || "Something went wrong!"
+      );
     }
   };
 
@@ -44,21 +45,22 @@ export default function Login() {
     <>
       <form
         onSubmit={handleLogIn}
-        autoComplete="off"
         className="max-w-2xl flex flex-col items-center"
+        autoComplete="off"
       >
         <fieldset className="mb-6">
           <label
-            htmlFor="username"
+            htmlFor="email"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
             Your email id
           </label>
           <input
+            type="email"
             name="email"
+            id="email"
             onChange={(e) => setEmail(e.target.value)}
             value={email}
-            type="email"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             required
           />
@@ -73,6 +75,7 @@ export default function Login() {
           <input
             type="password"
             name="password"
+            id="password"
             onChange={(e) => setPassword(e.target.value)}
             value={password}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -99,13 +102,6 @@ export default function Login() {
           Register now
         </Link>
       </p>
-      {errorMsg && (
-        <Toast
-          type="error"
-          message={errorMsg}
-          onRemove={() => setErrorMsg("")}
-        />
-      )}
     </>
   );
 }
