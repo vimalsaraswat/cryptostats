@@ -2,6 +2,8 @@ import "./globals.css";
 import { Inter } from "next/font/google";
 import { cookies } from "next/headers";
 import Header from "@/components/header";
+import Toast from "@/components/ui/Toast";
+import { ToastProvider } from "@/utils/ToastContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,13 +17,17 @@ export default function RootLayout({ children }) {
   if (cookies().get("my-refresh-token")) {
     userLoggedIn = true;
   }
+  console.log(userLoggedIn);
 
   return (
     <html lang="en">
       <body className={`${inter.className} h-screen w-screen flex flex-col`}>
         <Header userLoggedIn={userLoggedIn} />
-        <main className="grow flex flex-col items-center justify-center bg-zinc-900 text-stone-300">
-          {children}
+        <main className="grow flex flex-col items-center justify-center dark:bg-zinc-900 dark:text-stone-300 bg-zinc-100 text-stone-800">
+          <ToastProvider>
+            {children}
+            <Toast />
+          </ToastProvider>
         </main>
       </body>
     </html>
