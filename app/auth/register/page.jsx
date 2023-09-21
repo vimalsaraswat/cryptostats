@@ -3,15 +3,14 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import Toast from "@/components/ui/Toast";
 import Loading from "@/components/loading";
+import { useToast } from "@/utils/ToastContext";
 
 export default function Register() {
   const router = useRouter();
+  const { addToast } = useToast();
 
   const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
-
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -37,13 +36,13 @@ export default function Register() {
       .finally(() => setLoading(false));
 
     if (response.ok) {
-      setUsername("");
-      setEmail("");
-      setPassword("");
-
+      addToast("success", "Account created Successfully!", 10);
       router.push("/auth/login");
     } else {
-      setErrorMsg(response.message);
+      addToast(
+        "error",
+        response?.message || "Something went wrong, please try again!"
+      );
     }
   };
 
@@ -115,18 +114,16 @@ export default function Register() {
             Submit
           </button>
         )}
-        <p className="flex flex-col my-2">
-          <span>Already have an account?</span>
-          <Link href={"/auth/login"}>Login Now</Link>
-        </p>
       </form>
-      {errorMsg && (
-        <Toast
-          type="error"
-          message={errorMsg}
-          onRemove={() => setErrorMsg("")}
-        />
-      )}
+      <p className="flex flex-col my-4">
+        <span>Already have an account?</span>
+        <Link
+          href={"/auth/login"}
+          className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+        >
+          Login Now
+        </Link>
+      </p>
     </>
   );
 }
