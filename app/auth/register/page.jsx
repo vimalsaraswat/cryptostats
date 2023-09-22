@@ -31,28 +31,23 @@ export default function Register() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(user),
-    }).finally(() => setLoading(false));
+    })
+      .then((result) => result.json())
+      .finally(() => setLoading(false));
 
     if (response.ok) {
-      addToast("success", "Account created Successfully!");
-      addToast("success", "Please Login to proceed", 8);
+      addToast("success", "Account created Successfully!", 10);
       router.push("/auth/login");
     } else {
       addToast(
         "error",
-        (await response.json()).message ||
-          "Something went wrong, please try again!"
+        response?.message || "Something went wrong, please try again!"
       );
     }
   };
 
   return (
     <>
-      <p className="mb-6 text-center text-lg font-medium text-gray-900 dark:text-white">
-        Welcome! Join the party,
-        <br />
-        it's just a click away.😄
-      </p>
       <form
         onSubmit={handleRegister}
         autoComplete="off"
