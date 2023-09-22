@@ -96,7 +96,7 @@ export default function Login() {
       <p className="flex flex-col my-4">
         <span>Don't have an account?</span>
         <Link
-          href={"/auth/login"}
+          href={"/auth/register"}
           className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
         >
           Register now
