@@ -110,7 +110,7 @@ export default function Search() {
             className="relative w-0 h-0 z-10"
           >
             {searchResults.length > 0 ? (
-              <ul className="absolute top-0 left-0 h-60 overflow-y-scroll flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50  dark:bg-gray-800 dark:border-gray-700">
+              <ul className="absolute top-0 left-0 h-60 overflow-y-scroll flex flex-col p-4 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50  dark:bg-gray-800 dark:border-gray-700">
                 {searchResults.map((result, i) => {
                   return (
                     <li key={i} className="pb-3 sm:pb-4">
@@ -142,9 +142,11 @@ export default function Search() {
                 })}
               </ul>
             ) : (
-              <p className="absolute top-0 left-0 p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50  dark:bg-gray-800 dark:border-gray-700">
-                Nothing
-              </p>
+              !loading && (
+                <p className="absolute top-0 left-0 p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50  dark:bg-gray-800 dark:border-gray-700">
+                  Nothing
+                </p>
+              )
             )}
           </div>
         )}
