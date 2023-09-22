@@ -17,12 +17,12 @@ export async function POST(req) {
 
   if (user) {
     // Set user's data in "user_data" table
-    const { userData, error } = await supabase
+    const { data, error } = await supabase
       .from("user_data")
       .insert([{ user_id: user.id, username: username }])
       .select();
 
-    if (userData) {
+    if (data) {
       return NextResponse.json(
         { message: `User registered successfully!` },
         { status: 200 }
