@@ -1,14 +1,16 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { currencyFormat } from "@/helpers";
 import { getCurPrice } from "@/app/coin";
 import Loading from "@/components/loading";
 import { useToast } from "@/utils/ToastContext";
+import { UserDataContext } from "@/utils/UserContext";
 
 export default function Buy() {
   const { addToast } = useToast();
+  const cash = useContext(UserDataContext).user_data.cash;
 
   const [showConfirmation, setShowConfirmation] = useState(false);
 
@@ -35,10 +37,12 @@ export default function Buy() {
     return () => clearTimeout(timeoutId);
   }, [coinId]);
 
-  const handleBuy = async (e) => {
+  const handleBuy = (e) => {
     e.preventDefault();
 
-    if (amount < 1) {
+    if (amount > cash) {
+      addToast("warning", "Not enough cash balance!", 3);
+    } else if (amount < 1) {
       addToast("warning", "Amount should be greater than $1", 3);
     } else if (amount > 10000000) {
       addToast("warning", "Amount should be less than $10000000", 3);
