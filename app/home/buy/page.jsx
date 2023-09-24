@@ -5,10 +5,11 @@ import { useRouter } from "next/navigation";
 import { currencyFormat } from "@/helpers";
 import { getCurPrice } from "@/app/coin";
 import Loading from "@/components/loading";
-import Toast from "@/components/ui/Toast";
+import { useToast } from "@/utils/ToastContext";
 
 export default function Buy() {
-  const [errorMsg, setErrorMsg] = useState("");
+  const { addToast } = useToast();
+
   const [showConfirmation, setShowConfirmation] = useState(false);
 
   const [coinId, setCoinId] = useState("");
@@ -38,9 +39,9 @@ export default function Buy() {
     e.preventDefault();
 
     if (amount < 1) {
-      setErrorMsg("Amount should be greater than $1");
+      addToast("warning", "Amount should be greater than $1", 3);
     } else if (amount > 10000000) {
-      setErrorMsg("Amount should be less than $10000000");
+      addToast("warning", "Amount should be less than $10000000", 3);
     } else {
       setShowConfirmation(true);
     }
@@ -53,7 +54,7 @@ export default function Buy() {
         quantity={quantity}
         price={price}
         setShowConfirmation={setShowConfirmation}
-        setErrorMsg={setErrorMsg}
+        addToast={addToast}
       />
     );
   }
@@ -95,11 +96,12 @@ export default function Buy() {
           <input
             onChange={(e) => setQuantity(e.target.value)}
             value={quantity}
+            min={1e-5}
+            step={1e-5}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             name="coins"
             placeholder="Quantity"
             type="number"
-            min={1e-8}
             required
           />
         </fieldset>
@@ -118,14 +120,6 @@ export default function Buy() {
           Buy
         </button>
       </form>
-
-      {errorMsg && (
-        <Toast
-          type="error"
-          message={errorMsg}
-          onRemove={() => setErrorMsg("")}
-        />
-      )}
     </>
   );
 }
@@ -154,9 +148,11 @@ function ConfirmBuy(props) {
     }).finally(() => setLoading(false));
 
     if (response.ok) {
+      props.addToast("success", "Transaction successful!");
       router.push("/home");
     } else {
-      props.setErrorMsg(
+      props.addToast(
+        "error",
         (await response.json()).message || "Something went wrong!"
       );
       props.setShowConfirmation(false);
