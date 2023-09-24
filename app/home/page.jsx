@@ -1,69 +1,40 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useContext, useState, useEffect } from "react";
 import Link from "next/link";
-import { currencyFormat } from "../../helpers";
+import { currencyFormat } from "@/helpers";
 import { getCurPrice } from "@/app/coin";
 import Loading from "@/components/loading";
+import { UserDataContext } from "@/utils/UserContext";
 
 export default function Home() {
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-  const [userData, setUserData] = useState(null);
+  const userData = useContext(UserDataContext);
 
-  useEffect(() => {
-    fetch("/api/user/data")
-      .then((response) => response.text())
-      .then((result) => {
-        setUserData(JSON.parse(result).data);
-      })
-      .catch((error) => {
-        console.error(error);
-        setError(true);
-      })
-      .finally(() => setLoading(false));
-  }, []);
-
-  if (loading)
-    return (
-      <>
-        <Loading type="large" />
-        <span className="sr-only">Loading</span>
-      </>
-    );
-  else if (error)
-    return (
-      <main>
-        Something went wrong,
-        <br />
-        Try refreshing after some time.
-      </main>
-    );
-  else
-    return (
-      <>
-        <section id="hero" className="flex items-center space-x-4 m-4">
-          <img
-            className="w-10 h-10 rounded-full"
-            src="https://source.boringavatars.com/"
-            alt=""
-          />
-          <div className="font-medium dark:text-white">
-            <h2>{userData.user_data.username}</h2>
-            <div className="text-sm text-gray-500 dark:text-gray-400">
-              {currencyFormat(userData.user_data.cash)}
-            </div>
+  return (
+    <div className="h-full">
+      <section id="hero" className="flex items-center space-x-4 m-4">
+        <img
+          className="w-10 h-10 rounded-full"
+          src="https://source.boringavatars.com/"
+          alt=""
+        />
+        <div className="font-medium dark:text-white">
+          <h2>{userData.user_data.username}</h2>
+          <div className="text-sm text-gray-500 dark:text-gray-400">
+            {currencyFormat(userData.user_data.cash)}
           </div>
-        </section>
-        <Tokens tokens={userData.tokens} />
-      </>
-    );
+        </div>
+      </section>
+      <Tokens tokens={userData.tokens} />
+    </div>
+  );
 }
 
 function Tokens({ tokens }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [userTokens, setUserTokens] = useState([]);
+  let totalTokenValue = 0;
 
   useEffect(() => {
     // Create a function to fetch token prices asynchronously
@@ -119,38 +90,33 @@ function Tokens({ tokens }) {
         Try refreshing after some time.
       </main>
     );
-  else console.log(userTokens);
-  return (
-    <section
-      id="user-owned-tokens"
-      className="relative overflow-x-auto shadow-md rounded-sm sm:rounded-lg"
-    >
-      <h3 className="text-2xl text-[#b0ccda]">Your Tokens:</h3>
-      <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-          <tr>
-            <th scope="col" className="px-6 py-3">
-              Token Name
-            </th>
-            <th scope="col" className="hidden px-6 py-3 sm:block">
-              Current Price
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Quantity
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Value Now
-            </th>
-            <th scope="col" className="px-6 py-3 hidden sm:block">
-              Action
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {" "}
-          {userTokens.map((token, i) => {
-            return (
-              <>
+  else
+    return (
+      <section
+        id="user-owned-tokens"
+        className="relative overflow-x-auto shadow-md rounded-sm sm:rounded-lg"
+      >
+        <h3 className="text-2xl text-[#b0ccda]">Your Tokens:</h3>
+        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+              <th scope="col" className="px-6 py-3">
+                Token Name
+              </th>
+              <th scope="col" className="hidden px-6 py-3 sm:block">
+                Current Price
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Quantity
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Value Now
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {userTokens.map((token, i) => {
+              return (
                 <tr
                   className={
                     i % 2 == 0
@@ -172,20 +138,11 @@ function Tokens({ tokens }) {
                   <td className="px-6 py-4">{token.quantity}</td>
 
                   <td className="px-6 py-4">{currencyFormat(token.value)}</td>
-                  <td className="px-6 py-4 hidden sm:block">
-                    <a
-                      href="#"
-                      className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                    >
-                      Edit
-                    </a>
-                  </td>
                 </tr>
-              </>
-            );
-          })}
-        </tbody>
-      </table>
-    </section>
-  );
+              );
+            })}
+          </tbody>
+        </table>
+      </section>
+    );
 }
