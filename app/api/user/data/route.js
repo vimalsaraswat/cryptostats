@@ -25,12 +25,12 @@ export async function GET(request) {
 
   const tokens = Object.values(
     transactions.reduce((acc, item) => {
-      acc[item.coinId] = acc[item.coinId]
-        ? { ...item, quantity: item.quantity + acc[item.coinId].quantity }
-        : item;
+      const { coinId, quantity } = item;
+      acc[coinId] = acc[coinId] || { coinId, quantity: 0 };
+      acc[coinId].quantity += quantity;
       return acc;
     }, {})
-  );
+  ).filter((item) => item.quantity !== 0);
 
   return NextResponse.json(
     { data: { user_data: user_data[0], tokens: tokens } },
