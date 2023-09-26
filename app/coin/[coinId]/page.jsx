@@ -34,20 +34,27 @@ export default function Coin({ params }) {
     );
   else if (error)
     return (
-      <main>
+      <>
         Something went wrong,
         <br />
         Try refreshing after some time.
-      </main>
+      </>
     );
   else
     return (
       <>
         {price ? (
           <div className="h-full">
-            <h2 className="text-4xl p-4 font-bold text-stone-200 tracking-wider text-center ">
-              {coinData.name}
-            </h2>
+            <div className="my-4 flex items-end justify-center">
+              <img
+                class="w-20 h-20 p-1 rounded-full ring-2 ring-gray-300 dark:ring-gray-500"
+                src={coinData.image.small}
+                alt={`${coinData.name}'s image`}
+              />
+              <h2 className="text-4xl p-4 font-bold text-stone-200 tracking-wider text-center ">
+                {coinData.name}
+              </h2>
+            </div>
             <div className="flex gap-4 flex-col md:flex-row">
               <div className="md:min-w-2xl md:w-3/4 flex flex-col gap-4">
                 <Hero
@@ -149,6 +156,9 @@ function AboutToken({ coinData }) {
   const [descOpen, setDescOpen] = useState(false);
   return (
     <section id="about" className="w-11/12 mx-auto flex flex-col gap-4">
+      <h4 className="tracking-wide text-gray-500 md:text-lg dark:text-gray-400 underline underline-offset-2">
+        Info:
+      </h4>
       <p
         onClick={() => (descOpen ? "" : setDescOpen(true))}
         className={(descOpen ? "" : "line-clamp-3") + " md:max-w-2xl"}
