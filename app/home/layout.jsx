@@ -11,7 +11,7 @@ export default function HomeLayout({ children }) {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    fetch("/api/user/data", { next: { revalidate: 2 } })
+    fetch("/api/user/data")
       .then((response) => response.text())
       .then((result) => {
         setData(JSON.parse(result).data);
