@@ -41,18 +41,18 @@ export default function History() {
     );
   else
     return (
-      <div className="max-w-5xl flex flex-col items-center justify-center">
-        <h2 className="mb-4 text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400 md:text-5xl">
+      <div className="mt-2 w-full h-full overflow-scroll">
+        <h2 className="mb-4 text-3xl text-center font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400 md:text-5xl">
           History
         </h2>
-        <div className="h-80 overflow-scroll">
-          <table className="text-sm text-left text-gray-500 dark:text-gray-400">
+        <div className="flex-1 shadow-xl ring-1 ring-gray-900/5">
+          <table className="mx-auto w-2/3 h-4/5 overflow-scroll text-sm text-left text-gray-500 dark:text-gray-400">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
                 <th scope="col" className="px-6 py-3">
                   Token Name
                 </th>
-                <th scope="col" className="px-6 py-3">
+                <th scope="col" className="px-6 py-3 hidden sm:block">
                   Price Then
                 </th>
                 <th scope="col" className="px-6 py-3">
@@ -86,7 +86,7 @@ export default function History() {
                         {transaction.coinId.toUpperCase()}
                       </Link>
                     </th>
-                    <td className="px-6 py-4">
+                    <td className="px-6 py-4 hidden sm:block">
                       {currencyFormat(transaction.price)}
                     </td>
                     <td className="px-6 py-4">{transaction.quantity}</td>
