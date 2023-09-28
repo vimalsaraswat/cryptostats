@@ -11,15 +11,18 @@ export default function Home() {
   const userData = useContext(UserDataContext);
 
   return (
-    <div className="h-full">
-      <section id="hero" className="flex items-center space-x-4 m-4">
+    <div className="w-full h-full">
+      <section
+        id="hero"
+        className="flex items-center justify-center space-x-4 m-4"
+      >
         <img
           className="w-10 h-10 rounded-full"
           src="https://source.boringavatars.com/"
           alt=""
         />
         <div className="font-medium dark:text-white">
-          <h2>{userData.user_data.username}</h2>
+          <h2 className="text-lg md:text-xl">{userData.user_data.username}</h2>
           <div className="text-sm text-gray-500 dark:text-gray-400">
             {currencyFormat(userData.user_data.cash)}
           </div>
@@ -34,7 +37,6 @@ function Tokens({ tokens }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [userTokens, setUserTokens] = useState([]);
-  let totalTokenValue = 0;
 
   useEffect(() => {
     // Create a function to fetch token prices asynchronously
@@ -94,22 +96,22 @@ function Tokens({ tokens }) {
     return (
       <section
         id="user-owned-tokens"
-        className="relative overflow-x-auto shadow-md rounded-sm sm:rounded-lg"
+        className="relative max-w-fit h-full mx-auto overflow-scroll sm:overflow-auto shadow-md rounded-sm sm:rounded-lg"
       >
-        <h3 className="text-2xl text-[#b0ccda]">Your Tokens:</h3>
+        <h3 className="text-2xl text-stone-400">Your Tokens:</h3>
         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th scope="col" className="px-6 py-3">
                 Token Name
               </th>
-              <th scope="col" className="hidden px-6 py-3 sm:block">
+              <th scope="col" className="px-6 py-3 hidden sm:block">
                 Current Price
               </th>
               <th scope="col" className="px-6 py-3">
                 Quantity
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-6 py-3 hidden sm:block">
                 Value Now
               </th>
             </tr>
@@ -136,8 +138,9 @@ function Tokens({ tokens }) {
                     {currencyFormat(token.price)}
                   </td>
                   <td className="px-6 py-4">{token.quantity}</td>
-
-                  <td className="px-6 py-4">{currencyFormat(token.value)}</td>
+                  <td className="px-6 py-4 hidden sm:block">
+                    {currencyFormat(token.value)}
+                  </td>
                 </tr>
               );
             })}
