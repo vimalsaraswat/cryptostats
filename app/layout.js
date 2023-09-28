@@ -17,13 +17,14 @@ export default function RootLayout({ children }) {
   if (cookies().get("my-refresh-token")) {
     userLoggedIn = true;
   }
-  console.log(userLoggedIn);
 
   return (
     <html lang="en">
-      <body className={`${inter.className} h-screen w-screen flex flex-col`}>
+      <body
+        className={`${inter.className} h-screen w-screen flex flex-col justify-between dark:bg-zinc-900 dark:text-stone-300 bg-zinc-100 text-stone-800`}
+      >
         <Header userLoggedIn={userLoggedIn} />
-        <main className="grow flex flex-col items-center justify-center dark:bg-zinc-900 dark:text-stone-300 bg-zinc-100 text-stone-800">
+        <main className="grow flex flex-col items-center justify-center overflow-hidden">
           <ToastProvider>
             {children}
             <Toast />
