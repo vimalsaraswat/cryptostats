@@ -1,47 +1,29 @@
 "use client";
 
-import { useContext, useState, useEffect } from "react";
+import useSWR from "swr";
 import { UserDataContext } from "@/utils/UserContext";
 import Loading from "@/components/loading";
 
+const fetcher = (...args) => fetch(...args).then((res) => res.json());
+
 export default function HomeLayout({ children }) {
-  const [data, setData] = useState(null);
+  const { data, error, isLoading } = useSWR("/api/user/data", fetcher);
 
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-
-  useEffect(() => {
-    fetch("/api/user/data")
-      .then((response) => response.text())
-      .then((result) => {
-        setData(JSON.parse(result).data);
-      })
-      .catch((error) => {
-        console.error(error);
-        setError(true);
-      })
-      .finally(() => setLoading(false));
-  }, []);
-
-  if (loading) {
+  if (error)
     return (
-      <>
-        <Loading type="large" />
-        <span className="sr-only">Loading</span>
-      </>
+      <div>
+        <p>
+          Something went wrong,
+          <br />
+          Try refreshing after some time.
+        </p>
+      </div>
     );
-  }
-  if (error) {
-    return (
-      <p>
-        Something went wrong,
-        <br />
-        Try refreshing after some time.
-      </p>
-    );
-  }
+  if (isLoading) return <Loading type="large" />;
 
   return (
-    <UserDataContext.Provider value={data}>{children}</UserDataContext.Provider>
+    <UserDataContext.Provider value={data.data}>
+      {children}
+    </UserDataContext.Provider>
   );
 }
