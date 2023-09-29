@@ -20,6 +20,10 @@ export default function NavItems({ userLoggedIn }) {
           link: "/home/sell",
         },
         {
+          name: "History",
+          link: "/home/history",
+        },
+        {
           name: "LogOut",
           link: "/auth/logout",
         },
