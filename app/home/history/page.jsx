@@ -24,13 +24,7 @@ export default function History() {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading)
-    return (
-      <>
-        <Loading type="large" />
-        <span className="sr-only">Loading</span>
-      </>
-    );
+  if (loading) return <Loading type="large" />;
   else if (error)
     return (
       <>
@@ -41,67 +35,51 @@ export default function History() {
     );
   else
     return (
-      <div className="mt-2 w-full h-full overflow-scroll">
-        <h2 className="mb-4 text-3xl text-center font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400 md:text-5xl">
+      <div className="my-2 w-full h-full overflow-auto">
+        <h2 className="mb-4 w-fit mx-auto text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400 md:text-5xl lg:text-6xl">
           History
         </h2>
-        <div className="flex-1 shadow-xl ring-1 ring-gray-900/5">
-          <table className="mx-auto w-2/3 h-4/5 overflow-scroll text-sm text-left text-gray-500 dark:text-gray-400">
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-              <tr>
-                <th scope="col" className="px-6 py-3">
-                  Token Name
-                </th>
-                <th scope="col" className="px-6 py-3 hidden sm:block">
-                  Price Then
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Quantity
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Time
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {transactions?.map((transaction, i) => {
-                console.log(
-                  DateTime.fromISO(transaction.created_at).toLocaleString(
-                    "DATETIME_SHORT_WITH_SECONDS"
-                  )
-                );
-                return (
-                  <tr
-                    className={
-                      i % 2 == 0
-                        ? "bg-white border-b dark:bg-gray-900 dark:border-gray-700"
-                        : "border-b bg-gray-50 dark:bg-gray-800 dark:border-gray-700"
-                    }
+        <table className="w-fit h-fit py-4 mx-auto overflow-auto bg-gray-200 dark:bg-gray-800 rounded-md bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-40 text-sm text-left text-gray-500 dark:text-gray-400">
+          <thead className="text-xs text-gray-700 uppercase bg-opacity-75 bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+              <th scope="col" className="px-6 py-3">
+                Token
+              </th>
+              <th scope="col" className="px-6 py-3 hidden sm:block">
+                Rate
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Quantity
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Time
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {transactions?.map((transaction, i) => {
+              return (
+                <tr id={i}>
+                  <th
+                    scope="row"
+                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                   >
-                    <th
-                      scope="row"
-                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                    >
-                      <Link href={`/coin/${transaction.coinId}`}>
-                        {transaction.coinId.toUpperCase()}
-                      </Link>
-                    </th>
-                    <td className="px-6 py-4 hidden sm:block">
-                      {currencyFormat(transaction.price)}
-                    </td>
-                    <td className="px-6 py-4">{transaction.quantity}</td>
-
-                    <td className="px-6 py-4">
-                      {DateTime.fromISO(transaction.created_at).toLocaleString(
-                        "f"
-                      )}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+                    <Link href={`/coin/${transaction.coinId}`}>
+                      {transaction.coinId.toUpperCase()}
+                    </Link>
+                  </th>
+                  <td className="px-6 py-4 hidden sm:block">
+                    {currencyFormat(transaction.price)}
+                  </td>
+                  <td className="px-6 py-4">{transaction.quantity}</td>
+                  <td className="px-6 py-4">
+                    {DateTime.fromISO(transaction.created_at).toFormat("ff")}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </div>
     );
 }
