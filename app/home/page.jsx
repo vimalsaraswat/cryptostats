@@ -1,15 +1,14 @@
 "use client";
 
-import { useContext, useState, useEffect } from "react";
+import { useContext } from "react";
+import useSWR from "swr";
 import Link from "next/link";
 import { currencyFormat } from "@/helpers";
-import { getCurPrice } from "@/app/coin";
 import Loading from "@/components/loading";
 import { UserDataContext } from "@/utils/UserContext";
 
 export default function Home() {
   const userData = useContext(UserDataContext);
-
   return (
     <div className="w-full h-full">
       <section
@@ -22,7 +21,7 @@ export default function Home() {
           alt=""
         />
         <div className="font-medium dark:text-white">
-          <h2 className="text-lg md:text-xl">{userData.user_data.username}</h2>
+          <h2 className="text-xl md:text-2xl">{userData.user_data.username}</h2>
           <div className="text-sm text-gray-500 dark:text-gray-400">
             {currencyFormat(userData.user_data.cash)}
           </div>
@@ -34,118 +33,98 @@ export default function Home() {
 }
 
 function Tokens({ tokens }) {
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-  const [userTokens, setUserTokens] = useState([]);
+  let ids = "";
+  tokens.forEach((item, i) =>
+    i === 0 ? (ids += item.coinId) : (ids += `%2C${item.coinId}`)
+  );
+  const { data, error, isLoading } = useSWR(
+    `https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd&include_24hr_change=true`,
+    (...args) => fetch(...args).then((res) => res.json())
+  );
 
-  useEffect(() => {
-    // Create a function to fetch token prices asynchronously
-    const fetchTokenPrices = async () => {
-      try {
-        const updatedUserTokens = await Promise.all(
-          tokens.map(async (token) => {
-            try {
-              const price = await getCurPrice(token.coinId);
-              return {
-                id: token.coinId,
-                price: price,
-                quantity: token.quantity,
-                value: price * token.quantity,
-              };
-            } catch (error) {
-              console.error(error);
-              setError(true);
-              return null; // Return null for tokens with errors
-            }
-          })
-        );
+  if (error)
+    return (
+      <div>
+        <p>
+          Something went wrong,
+          <br />
+          Try refreshing after some time.
+        </p>
+      </div>
+    );
+  if (isLoading)
+    return (
+      <div className="flex h-full items-center justify-center">
+        <Loading type="large" />
+      </div>
+    );
 
-        // Filter out tokens with errors (null values)
-        const filteredUserTokens = updatedUserTokens.filter(
-          (token) => token !== null
-        );
-        setUserTokens(filteredUserTokens);
-      } catch (error) {
-        console.error(error);
-        setError(true);
-      }
-
-      setLoading(false);
+  const userTokens = tokens.map((token) => {
+    const coinId = token.coinId;
+    const price = data[coinId].usd;
+    return {
+      id: coinId,
+      price: price,
+      quantity: token.quantity,
+      value: price * token.quantity,
+      usd_24h_change: data[coinId].usd_24h_change,
     };
+  });
 
-    // Call the async function
-    fetchTokenPrices();
-  }, []);
-
-  if (loading)
-    return (
-      <>
-        <Loading />
-        <span className="sr-only">Loading</span>
-      </>
-    );
-  else if (error)
-    return (
-      <main>
-        Something went wrong,
-        <br />
-        Try refreshing after some time.
-      </main>
-    );
-  else
-    return (
-      <section
-        id="user-owned-tokens"
-        className="relative max-w-fit h-full mx-auto overflow-scroll sm:overflow-auto shadow-md rounded-sm sm:rounded-lg"
-      >
-        <h3 className="text-2xl text-stone-400">Your Tokens:</h3>
-        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-              <th scope="col" className="px-6 py-3">
-                Token Name
-              </th>
-              <th scope="col" className="px-6 py-3 hidden sm:block">
-                Current Price
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Quantity
-              </th>
-              <th scope="col" className="px-6 py-3 hidden sm:block">
-                Value Now
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {userTokens.map((token, i) => {
-              return (
-                <tr
-                  className={
-                    i % 2 == 0
-                      ? "bg-white border-b dark:bg-gray-900 dark:border-gray-700"
-                      : "border-b bg-gray-50 dark:bg-gray-800 dark:border-gray-700"
-                  }
+  return (
+    <section
+      id="user-owned-tokens"
+      className="relative max-w-fit h-full mx-auto overflow-auto"
+    >
+      <h3 className="sr-only">Your Tokens:</h3>
+      <table className="h-fit w-fit bg-gray-200 dark:bg-gray-800 rounded-md bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-40 text-sm text-left text-gray-500 dark:text-gray-400">
+        <thead className="text-xs text-gray-700 uppercase bg-opacity-75 bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+          <tr>
+            <th scope="col" className="px-6 py-3">
+              Token Name
+            </th>
+            <th scope="col" className="px-6 py-3 hidden sm:block">
+              Current Price
+            </th>
+            <th scope="col" className="px-6 py-3">
+              Quantity
+            </th>
+            <th scope="col" className="px-6 py-3 hidden sm:block">
+              Value Now
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {userTokens.map((token, i) => {
+            return (
+              <tr key={i}>
+                <th
+                  scope="row"
+                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                 >
-                  <th
-                    scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                  >
-                    <Link href={`/coin/${token.id}`}>
-                      {token.id.toUpperCase()}
-                    </Link>
-                  </th>
-                  <td className="px-6 py-4 hidden sm:block">
-                    {currencyFormat(token.price)}
-                  </td>
-                  <td className="px-6 py-4">{token.quantity}</td>
-                  <td className="px-6 py-4 hidden sm:block">
-                    {currencyFormat(token.value)}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </section>
-    );
+                  <Link href={`/coin/${token.id}`}>
+                    {token.id.toUpperCase()}
+                  </Link>
+                </th>
+
+                <td
+                  className={`${
+                    token.usd_24h_change > 0
+                      ? "text-emerald-400"
+                      : "text-red-400"
+                  } px-6 py-4 hidden sm:block`}
+                >
+                  {currencyFormat(token.price)}
+                </td>
+                <td className="px-6 py-4">{token.quantity}</td>
+                <td className="px-6 py-4 hidden sm:block">
+                  {currencyFormat(token.value)}
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </section>
+  );
 }
