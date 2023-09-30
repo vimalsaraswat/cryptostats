@@ -1,7 +1,7 @@
 import "./globals.css";
 import { Inter } from "next/font/google";
 import { cookies } from "next/headers";
-import Header from "@/components/header";
+import Header from "@/components/ui/header";
 import Toast from "@/components/ui/Toast";
 import { ToastProvider } from "@/utils/ToastContext";
 
@@ -21,7 +21,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${inter.className} h-screen w-screen flex flex-col justify-between dark:bg-zinc-900 dark:text-stone-300 bg-zinc-100 text-stone-800`}
+        className={`${inter.className} h-screen w-screen flex flex-col justify-between  dark:text-stone-300 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-gray-200 via-gray-400 to-gray-600 dark:bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] dark:from-gray-700 dark:via-gray-900 dark:to-black text-stone-800`}
       >
         <Header userLoggedIn={userLoggedIn} />
         <main className="grow flex flex-col items-center justify-center overflow-hidden">
