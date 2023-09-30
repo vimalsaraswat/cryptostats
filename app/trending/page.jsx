@@ -27,48 +27,34 @@ export default function Trending() {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading)
-    return (
-      <>
-        <Loading type="large" />
-        <span className="sr-only">Loading</span>
-      </>
-    );
+  if (loading) return <Loading type="large" />;
   else if (error)
     return (
-      <main>
+      <>
         Something went wrong,
         <br />
         Try refreshing after some time.
-      </main>
+      </>
     );
   else
     return (
-      <>
-        <h2 className="mb-4 text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400 md:text-5xl lg:text-6xl">
+      <div className="my-2 w-full h-full overflow-auto">
+        <h2 className="mb-4 w-fit mx-auto text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400 md:text-5xl lg:text-6xl">
           Trending
         </h2>
-        <table className="w-10/12 max-w-5xl mx-4 text-sm text-left text-gray-500 dark:text-gray-400 rounded-md">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+        <table className="w-fit h-fit py-4 mx-auto overflow-auto bg-gray-200 dark:bg-gray-800 rounded-md bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-40 text-sm text-left text-gray-500 dark:text-gray-400">
+          <thead className="text-xs text-gray-700 uppercase bg-opacity-75 bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
-              <th className="px-6 py-3">Coins</th>
+              <th className="px-6 py-3">Token</th>
               <th className="px-6 py-3">Symbol</th>
               <th className="px-6 py-3">Price</th>
-              <th className="hidden sm:block px-6 py-3">Market Cap Rank</th>
             </tr>
           </thead>
-          <tbody className="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
+          <tbody>
             {trendingCoins.map((coin, i) => {
               return (
-                <tr
-                  key={coin.item.coin_id}
-                  className={
-                    i % 2 === 0
-                      ? "bg-white border-b dark:bg-gray-900 dark:border-gray-700"
-                      : "border-b bg-gray-50 dark:bg-gray-800 dark:border-gray-700"
-                  }
-                >
-                  <td className="px-6 py-4 w-4/10 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                <tr key={i}>
+                  <td className="px-6 py-4 font-medium">
                     <Link
                       className="flex gap-2 items-center"
                       href={`/coin/${coin.item.id}`}
@@ -78,21 +64,25 @@ export default function Trending() {
                         src={coin.item.small}
                         alt={`${coin.item.name}`}
                       />
-                      <span>{coin.item.name}</span>
+                      <div className="">
+                        <span className="block truncate text-gray-900 dark:text-white">
+                          {coin.item.name}
+                        </span>
+                        <span className="text-xs">
+                          Rank: {coin.item.market_cap_rank}
+                        </span>
+                      </div>
                     </Link>
                   </td>
                   <td className="px-6 py-4">{coin.item.symbol}</td>
                   <td className="px-6 py-4">
                     {currencyFormat(btcExchangeRate * coin.item.price_btc)}
                   </td>
-                  <td className="hidden sm:block px-6 py-4">
-                    {coin.item.market_cap_rank}
-                  </td>
                 </tr>
               );
             })}
           </tbody>
         </table>
-      </>
+      </div>
     );
 }
