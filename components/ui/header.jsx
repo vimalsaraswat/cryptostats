@@ -3,11 +3,11 @@
 import { useState } from "react";
 import Search from "@/app/home/search";
 import Logo from "@/components/logo";
-import NavItems from "./navItems";
+import NavItems from "@/components/navItems";
 
 export default function header({ userLoggedIn }) {
   return (
-    <header className="bg-white max-w-screen dark:bg-gray-900 w-full border-b border-gray-200 dark:border-gray-600">
+    <header className="h-fit w-full bg-gray-200 dark:bg-gray-800 bg-clip-padding backdrop-filter backdrop-blur-md bg-opacity-60 border-b border-gray-200 dark:border-gray-600">
       <div className="max-w-screen-xl flex flex-wrap gap-x-4 sm:gap-y-4 items-center justify-between sm:justify-evenly lg:justify-between mx-auto p-4">
         <Logo />
         <Nav userLoggedIn={userLoggedIn} />
