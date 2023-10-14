@@ -7,8 +7,8 @@ import NavItems from "@/components/navItems";
 
 export default function header({ userLoggedIn }) {
   return (
-    <header className="h-fit w-full bg-gray-200 dark:bg-gray-800 bg-clip-padding backdrop-filter backdrop-blur-md bg-opacity-60 border-b border-gray-200 dark:border-gray-600">
-      <div className="max-w-screen-xl flex flex-wrap gap-x-4 sm:gap-y-4 items-center justify-between sm:justify-evenly lg:justify-between mx-auto p-4">
+    <header className="h-fit w-full border-b border-gray-400 bg-gray-300 bg-opacity-60 bg-clip-padding backdrop-blur-md backdrop-filter dark:border-gray-600 dark:bg-gray-800">
+      <div className="mx-auto flex max-w-screen-xl flex-wrap items-center justify-between gap-x-4 p-4 sm:justify-evenly sm:gap-y-4 lg:justify-between">
         <Logo />
         <Nav userLoggedIn={userLoggedIn} />
       </div>
@@ -22,16 +22,16 @@ function Nav({ userLoggedIn }) {
 
   return (
     <>
-      <div className="lg:hidden sm:order-3 flex gap-2">
+      <div className="flex gap-2 sm:order-3 lg:hidden">
         <SearchIcon searchOpen={searchOpen} setSearchOpen={setSearchOpen} />
 
         <HamburgerMenu menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
       </div>
-      <div className={`${!searchOpen && "hidden"} sm:block w-full sm:w-auto`}>
+      <div className={`${!searchOpen && "hidden"} w-full sm:block sm:w-auto`}>
         <Search />
       </div>
       <div
-        className={`${!menuOpen && "hidden"} order-4 lg:block w-full sm:w-auto`}
+        className={`${!menuOpen && "hidden"} order-4 w-full sm:w-auto lg:block`}
       >
         <NavItems userLoggedIn={userLoggedIn} />
       </div>
@@ -46,10 +46,10 @@ function SearchIcon({ searchOpen, setSearchOpen }) {
         searchOpen ? setSearchOpen(false) : setSearchOpen(true);
       }}
       type="button"
-      className="sm:hidden text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 mr-1"
+      className="mr-1 rounded-lg p-2.5 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-700 sm:hidden"
     >
       <svg
-        className="w-5 h-5"
+        className="h-5 w-5"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 20 20"
@@ -74,11 +74,11 @@ function HamburgerMenu({ menuOpen, setMenuOpen }) {
         menuOpen ? setMenuOpen(false) : setMenuOpen(true);
       }}
       type="button"
-      className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+      className="inline-flex h-10 w-10 items-center justify-center rounded-lg p-2 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
     >
       <span className="sr-only">Open main menu</span>
       <svg
-        className="w-5 h-5"
+        className="h-5 w-5"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 17 14"
