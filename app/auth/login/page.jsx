@@ -31,12 +31,12 @@ export default function Login() {
     }).finally(() => setLoading(false));
 
     if (response.ok) {
-      addToast("success", "Welcome my friend, welcome!", 10);
-      router.push("/home");
+      addToast("success", "Welcome my friend, welcome!", 8);
+      router.refresh();
     } else {
       addToast(
         "error",
-        (await response.json()).message || "Something went wrong!"
+        (await response.json()).message || "Something went wrong!",
       );
     }
   };
@@ -45,13 +45,13 @@ export default function Login() {
     <>
       <form
         onSubmit={handleLogIn}
-        className="max-w-2xl flex flex-col items-center"
+        className="flex max-w-2xl flex-col items-center"
         autoComplete="off"
       >
         <fieldset className="mb-6">
           <label
             htmlFor="email"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
           >
             Your email id
           </label>
@@ -61,14 +61,14 @@ export default function Login() {
             id="email"
             onChange={(e) => setEmail(e.target.value)}
             value={email}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
             required
           />
         </fieldset>
         <fieldset className="mb-6">
           <label
             htmlFor="password"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
           >
             Your password
           </label>
@@ -78,7 +78,7 @@ export default function Login() {
             id="password"
             onChange={(e) => setPassword(e.target.value)}
             value={password}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
             required
           />
         </fieldset>
@@ -87,17 +87,17 @@ export default function Login() {
         ) : (
           <button
             type="submit"
-            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            className="w-full rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 sm:w-auto"
           >
             LogIn
           </button>
         )}
       </form>
-      <p className="flex flex-col my-4">
+      <p className="my-4 flex flex-col">
         <span>Don't have an account?</span>
         <Link
           href={"/auth/register"}
-          className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+          className="font-medium text-blue-600 hover:underline dark:text-blue-500"
         >
           Register now
         </Link>
