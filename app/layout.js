@@ -2,6 +2,7 @@ import "./globals.css";
 import { Inter } from "next/font/google";
 import { cookies } from "next/headers";
 import Header from "@/components/ui/header";
+import Footer from "@/components/ui/footer";
 import Toast from "@/components/ui/Toast";
 import { ToastProvider } from "@/utils/ToastContext";
 
@@ -31,6 +32,7 @@ export default function RootLayout({ children }) {
             <Toast />
           </ToastProvider>
         </main>
+        <Footer />
       </body>
     </html>
   );
