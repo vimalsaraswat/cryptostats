@@ -3,30 +3,34 @@ import { createClient } from "@supabase/supabase-js";
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_KEY;
 
+let supabaseInstance = null;
+
 export async function initSupabase(req) {
-  // Creating Supabase client
-  const supabase = createClient(supabaseUrl, supabaseKey, {
-    auth: { persistSession: false },
-  });
+  if (!supabaseInstance) {
+    supabaseInstance = createClient(supabaseUrl, supabaseKey, {
+      auth: {
+        autoRefreshToken: true,
+        persistSession: true,
+        detectSessionInUrl: true,
+      },
+    });
 
-  const { session, error } = await supabase.auth.getSession();
+    const { session } = supabaseInstance.auth.getSession();
 
-  if (!session) {
-    // Getting auth-tokens from cookies
-    const refreshToken = req.cookies.get("my-refresh-token")?.value;
-    const accessToken = req.cookies.get("my-access-token")?.value;
+    if (!session?.user) {
+      const refreshToken = req.cookies.get("my-refresh-token")?.value;
+      const accessToken = req.cookies.get("my-access-token")?.value;
 
-    // Updating user's auth session
-    if (refreshToken && accessToken) {
-      await supabase.auth.setSession({
-        refresh_token: refreshToken,
-        access_token: accessToken,
-        auth: { persistSession: false },
-      });
+      if (refreshToken && accessToken) {
+        await supabaseInstance.auth.setSession({
+          refresh_token: refreshToken,
+          access_token: accessToken,
+        });
+      }
     }
   }
 
-  return supabase;
+  return supabaseInstance;
 }
 
 export async function getUser(req) {
