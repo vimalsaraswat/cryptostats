@@ -7,11 +7,11 @@ export default async function middleware(request) {
 
   if (user) {
     if (url.startsWith("/auth/login") || url.startsWith("/auth/register")) {
-      return NextResponse.redirect(new URL("/home", request.url));
+      return NextResponse.rewrite(new URL("/home", request.url));
     }
   } else if (!user) {
     if (url.startsWith("/home") || url.startsWith("/auth/logout"))
-      return NextResponse.redirect(new URL("/auth/login", request.url));
+      return NextResponse.rewrite(new URL("/auth/login", request.url));
   }
 }
 
