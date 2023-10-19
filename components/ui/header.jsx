@@ -33,7 +33,10 @@ function Nav({ userLoggedIn }) {
       <div
         className={`${!menuOpen && "hidden"} order-4 w-full sm:w-auto lg:block`}
       >
-        <NavItems userLoggedIn={userLoggedIn} />
+        <NavItems
+          userLoggedIn={userLoggedIn}
+          closeMenu={() => setMenuOpen(false)}
+        />
       </div>
     </>
   );
