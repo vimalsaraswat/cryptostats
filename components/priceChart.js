@@ -19,7 +19,7 @@ ChartJS.register(
   LinearScale,
   PointElement,
   Tooltip,
-  Legend
+  Legend,
 );
 
 const PriceChart = ({ data }) => {
@@ -51,6 +51,9 @@ const PriceChart = ({ data }) => {
           display: false,
           text: "Date",
         },
+        grid: {
+          display: false,
+        },
       },
       y: {
         title: {
@@ -60,6 +63,9 @@ const PriceChart = ({ data }) => {
         position: "right",
         ticks: {
           callback: currencyFormat,
+        },
+        grid: {
+          display: false,
         },
       },
     },
