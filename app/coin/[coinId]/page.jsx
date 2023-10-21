@@ -25,38 +25,32 @@ export default function Coin({ params }) {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading)
-    return (
-      <>
-        <Loading type="large" />
-        <span className="sr-only">Loading</span>
-      </>
-    );
+  if (loading) return <Loading type="large" />;
   else if (error)
     return (
-      <>
+      <p>
         Something went wrong,
         <br />
         Try refreshing after some time.
-      </>
+      </p>
     );
   else
     return (
       <>
         {price ? (
-          <div className="h-full">
+          <div className="my-2 h-full w-full overflow-auto">
             <div className="my-4 flex items-end justify-center">
               <img
-                class="w-20 h-20 p-1 rounded-full ring-2 ring-gray-300 dark:ring-gray-500"
+                className="h-20 w-20 rounded-full p-1 ring-2 ring-gray-300 dark:ring-gray-500"
                 src={coinData.image.small}
                 alt={`${coinData.name}'s image`}
               />
-              <h2 className="text-4xl p-4 font-bold text-stone-200 tracking-wider text-center ">
+              <h2 className="p-4 text-center text-4xl font-bold tracking-wider text-stone-600 dark:text-stone-200">
                 {coinData.name}
               </h2>
             </div>
-            <div className="flex gap-4 flex-col md:flex-row">
-              <div className="md:min-w-2xl md:w-3/4 flex flex-col gap-4">
+            <div className="flex flex-col gap-4 md:flex-row">
+              <div className="md:min-w-2xl flex flex-col gap-4 md:w-3/4">
                 <Hero
                   price={price}
                   symbol={coinData.symbol}
@@ -82,7 +76,7 @@ export default function Coin({ params }) {
 
 function Hero({ price, symbol, priceChange24h, high24h, low24h }) {
   return (
-    <section className="w-11/12 mx-auto flex justify-between">
+    <section className="mx-auto flex w-11/12 justify-between">
       <div className="w-4/10">
         <span className="text-4xl">{currencyFormat(price)}</span>
         <div className="flex gap-2">
@@ -97,7 +91,7 @@ function Hero({ price, symbol, priceChange24h, high24h, low24h }) {
         </div>
       </div>
 
-      <div className="flex flex-col gap-2 justify-between">
+      <div className="flex flex-col justify-between gap-2">
         <span>
           <p className="text-xs opacity-60">24h High</p>
           {currencyFormat(high24h)}
@@ -126,26 +120,20 @@ function TokenChart({ coinId }) {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading)
-    return (
-      <>
-        <Loading />
-        <span className="sr-only">Loading</span>
-      </>
-    );
+  if (loading) return <Loading />;
   else if (error)
     return (
-      <>
+      <p>
         Something went wrong,
         <br />
         Try refreshing after some time.
-      </>
+      </p>
     );
   else
     return (
-      <div className="w-10/12 mx-auto">
+      <div className="mx-auto w-full">
         <h3 className="sr-only">Token Price Chart</h3>
-        <div className="bg-[#c6edfb0a]">
+        <div className="mx-auto w-fit">
           <PriceChart data={chartData} />
         </div>
       </div>
@@ -155,8 +143,8 @@ function TokenChart({ coinId }) {
 function AboutToken({ coinData }) {
   const [descOpen, setDescOpen] = useState(false);
   return (
-    <section id="about" className="w-11/12 mx-auto flex flex-col gap-4">
-      <h4 className="tracking-wide text-gray-500 md:text-lg dark:text-gray-400 underline underline-offset-2">
+    <section id="about" className="mx-auto flex w-11/12 flex-col gap-4">
+      <h4 className="tracking-wide text-gray-500 underline underline-offset-2 dark:text-gray-400 md:text-lg">
         Info:
       </h4>
       <p
