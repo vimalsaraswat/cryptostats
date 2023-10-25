@@ -9,24 +9,21 @@ export async function initSupabase(req) {
   if (!supabaseInstance) {
     supabaseInstance = createClient(supabaseUrl, supabaseKey, {
       auth: {
-        autoRefreshToken: true,
-        persistSession: true,
-        detectSessionInUrl: true,
+        persistSession: false,
       },
     });
+  }
 
-    const { session } = supabaseInstance.auth.getSession();
+  if (req) {
+    const refreshToken = req.cookies.get("my-refresh-token")?.value;
+    const accessToken = req.cookies.get("my-access-token")?.value;
 
-    if (!session?.user) {
-      const refreshToken = req.cookies.get("my-refresh-token")?.value;
-      const accessToken = req.cookies.get("my-access-token")?.value;
-
-      if (refreshToken && accessToken) {
-        await supabaseInstance.auth.setSession({
-          refresh_token: refreshToken,
-          access_token: accessToken,
-        });
-      }
+    if (refreshToken && accessToken) {
+      await supabaseInstance.auth.setSession({
+        refresh_token: refreshToken,
+        access_token: accessToken,
+        auth: { persistSession: false },
+      });
     }
   }
 
@@ -40,5 +37,5 @@ export async function getUser(req) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (user) return user;
+  return user ? user : "";
 }
