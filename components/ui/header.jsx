@@ -5,7 +5,17 @@ import Search from "@/app/home/search";
 import Logo from "@/components/logo";
 import NavItems from "@/components/navItems";
 
-export default function header({ userLoggedIn }) {
+export default function header() {
+  let userLoggedIn = false;
+  if (
+    document.cookie
+      .split("; ")
+      .filter((row) => row.startsWith("my-refresh-token="))
+      .map((c) => c.split("=")[1])[0]
+  ) {
+    userLoggedIn = true;
+  }
+
   return (
     <header className="h-fit w-full border-b border-gray-400 bg-gray-300 bg-opacity-60 bg-clip-padding backdrop-blur-md backdrop-filter dark:border-gray-600 dark:bg-gray-800">
       <div className="mx-auto flex max-w-screen-xl flex-wrap items-center justify-between gap-x-4 p-4 sm:justify-evenly sm:gap-y-4 lg:justify-between">
