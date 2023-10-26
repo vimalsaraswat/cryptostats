@@ -1,4 +1,5 @@
 import "./globals.css";
+import { cookies } from "next/headers";
 import { Inter } from "next/font/google";
 import Header from "@/components/ui/header";
 import Footer from "@/components/ui/footer";
@@ -15,12 +16,17 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+  let userLoggedIn = false;
+  if (cookies().get("my-refresh-token")) {
+    userLoggedIn = true;
+  }
+
   return (
     <html lang="en">
       <body
         className={`${inter.className} flex h-screen w-screen flex-col justify-between  bg-[conic-gradient(at_left,_var(--tw-gradient-stops))] from-indigo-100 via-slate-400 to-indigo-100 text-stone-800 dark:bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] dark:from-gray-700 dark:via-gray-900 dark:to-black dark:text-stone-300`}
       >
-        <Header />
+        <Header userLoggedIn={userLoggedIn} />
         <main className="flex grow flex-col items-center justify-center overflow-hidden">
           <ToastProvider>
             {children}
