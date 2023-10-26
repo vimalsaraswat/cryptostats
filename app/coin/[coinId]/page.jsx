@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { currencyFormat } from "@/helpers";
 import { getCurPrice, getCoinData, getCoinChartData } from "@/app/coin";
-import PriceChart from "@/components/priceChart";
+import PriceChart from "@/components/ui/priceChart";
 import Loading from "@/components/loading";
 
 export default function Coin({ params }) {
@@ -34,44 +34,44 @@ export default function Coin({ params }) {
         Try refreshing after some time.
       </p>
     );
-  else
-    return (
-      <>
-        {price ? (
-          <div className="my-2 h-full w-full overflow-auto">
-            <div className="my-4 flex items-end justify-center">
-              <img
-                className="h-20 w-20 rounded-full p-1 ring-2 ring-gray-300 dark:ring-gray-500"
-                src={coinData.image.small}
-                alt={`${coinData.name}'s image`}
+
+  return (
+    <>
+      {price ? (
+        <div className="my-2 h-full w-full overflow-auto">
+          <div className="my-4 flex items-end justify-center">
+            <img
+              className="h-20 w-20 rounded-full p-1 ring-2 ring-gray-300 dark:ring-gray-500"
+              src={coinData.image.small}
+              alt={`${coinData.name}'s image`}
+            />
+            <h2 className="p-4 text-center text-4xl font-bold tracking-wider text-stone-600 dark:text-stone-200">
+              {coinData.name}
+            </h2>
+          </div>
+          <div className="flex flex-col gap-4 md:flex-row">
+            <div className="md:min-w-2xl flex flex-col gap-4 md:w-3/4">
+              <Hero
+                price={price}
+                symbol={coinData.symbol}
+                priceChange24h={
+                  coinData.market_data.price_change_percentage_24h
+                }
+                high24h={coinData.market_data.high_24h.usd}
+                low24h={coinData.market_data.low_24h.usd}
               />
-              <h2 className="p-4 text-center text-4xl font-bold tracking-wider text-stone-600 dark:text-stone-200">
-                {coinData.name}
-              </h2>
+              <TokenChart coinId={coin} />
             </div>
-            <div className="flex flex-col gap-4 md:flex-row">
-              <div className="md:min-w-2xl flex flex-col gap-4 md:w-3/4">
-                <Hero
-                  price={price}
-                  symbol={coinData.symbol}
-                  priceChange24h={
-                    coinData.market_data.price_change_percentage_24h
-                  }
-                  high24h={coinData.market_data.high_24h.usd}
-                  low24h={coinData.market_data.low_24h.usd}
-                />
-                <TokenChart coinId={coin} />
-              </div>
-              <div>
-                <AboutToken coinData={coinData} />
-              </div>
+            <div>
+              <AboutToken coinData={coinData} />
             </div>
           </div>
-        ) : (
-          <p className="text-2xl">Coin does't Exist!</p>
-        )}
-      </>
-    );
+        </div>
+      ) : (
+        <p className="text-2xl">Coin does't Exist!</p>
+      )}
+    </>
+  );
 }
 
 function Hero({ price, symbol, priceChange24h, high24h, low24h }) {
@@ -129,19 +129,20 @@ function TokenChart({ coinId }) {
         Try refreshing after some time.
       </p>
     );
-  else
-    return (
-      <div className="mx-auto w-full">
-        <h3 className="sr-only">Token Price Chart</h3>
-        <div className="mx-auto w-fit">
-          <PriceChart data={chartData} />
-        </div>
+
+  return (
+    <div className="mx-auto w-full">
+      <h3 className="sr-only">Token Price Chart</h3>
+      <div className="mx-auto w-fit">
+        <PriceChart data={chartData} />
       </div>
-    );
+    </div>
+  );
 }
 
 function AboutToken({ coinData }) {
   const [descOpen, setDescOpen] = useState(false);
+
   return (
     <section id="about" className="mx-auto flex w-11/12 flex-col gap-4">
       <h4 className="tracking-wide text-gray-500 underline underline-offset-2 dark:text-gray-400 md:text-lg">
