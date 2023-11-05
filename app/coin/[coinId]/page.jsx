@@ -49,8 +49,8 @@ export default function Coin({ params }) {
               {coinData.name}
             </h2>
           </div>
-          <div className="flex flex-col gap-4 md:flex-row">
-            <div className="md:min-w-2xl flex flex-col gap-4 md:w-3/4">
+          <div className="flex flex-col gap-4 md:flex-row md:justify-center">
+            <div className="md:min-w-2xl flex flex-col gap-4 md:w-1/2">
               <Hero
                 price={price}
                 symbol={coinData.symbol}
@@ -131,17 +131,17 @@ function TokenChart({ coinId }) {
     );
 
   return (
-    <div className="mx-auto w-full">
+    <div className="mx-auto flex w-10/12 justify-center">
       <h3 className="sr-only">Token Price Chart</h3>
-      <div className="mx-auto w-fit">
-        <PriceChart data={chartData} />
-      </div>
+      <PriceChart data={chartData} />
     </div>
   );
 }
 
 function AboutToken({ coinData }) {
-  const [descOpen, setDescOpen] = useState(false);
+  const [descrOpen, setDescrOpen] = useState(false);
+  const descr = coinData.description.en;
+  const marketData = coinData.market_data;
 
   return (
     <section id="about" className="mx-auto flex w-11/12 flex-col gap-4">
@@ -149,32 +149,35 @@ function AboutToken({ coinData }) {
         Info:
       </h4>
       <p
-        onClick={() => (descOpen ? "" : setDescOpen(true))}
-        className={(descOpen ? "" : "line-clamp-3") + " md:max-w-2xl"}
+        onClick={() => {
+          setDescrOpen(!descrOpen);
+          console.log(descrOpen);
+        }}
+        className={(descrOpen ? "" : "line-clamp-3") + " md:max-w-2xl"}
       >
-        {coinData.description.en}
+        {descr}
       </p>
 
       <ul>
         <li className="flex justify-between">
           <span>Circulating Supply:</span>
-          <span>{coinData.market_data.circulating_supply}</span>
+          <span>{marketData.circulating_supply}</span>
         </li>
         <li className="flex justify-between">
           <span>Total Supply:</span>
-          <span>{coinData.market_data.total_supply}</span>
+          <span>{marketData.total_supply}</span>
         </li>
         <li className="flex justify-between">
           <span>All-Time High Price:</span>
-          <span>{currencyFormat(coinData.market_data.ath.usd)}</span>
+          <span>{currencyFormat(marketData.ath.usd)}</span>
         </li>
         <li className="flex justify-between">
           <span>All-Time Low Price:</span>
-          <span>{currencyFormat(coinData.market_data.atl.usd)}</span>
+          <span>{currencyFormat(marketData.atl.usd)}</span>
         </li>
         <li className="flex justify-between">
           <span>Market Cap:</span>
-          <span>{currencyFormat(coinData.market_data.market_cap.usd)}</span>
+          <span>{currencyFormat(marketData.market_cap.usd)}</span>
         </li>
       </ul>
     </section>
