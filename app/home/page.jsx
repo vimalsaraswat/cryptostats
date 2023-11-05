@@ -9,25 +9,42 @@ import { UserDataContext } from "@/utils/UserContext";
 
 export default function Home() {
   const userData = useContext(UserDataContext);
+  const cash = userData.user_data.cash;
   return (
-    <div className="w-full h-full">
+    <div className="h-full w-full">
       <section
         id="hero"
-        className="flex items-center justify-center space-x-4 m-4"
+        className="m-4 flex items-center justify-center space-x-4"
       >
         <img
-          className="w-10 h-10 rounded-full"
+          className="h-10 w-10 rounded-full"
           src="https://source.boringavatars.com/"
           alt=""
         />
         <div className="font-medium dark:text-white">
           <h2 className="text-xl md:text-2xl">{userData.user_data.username}</h2>
           <div className="text-sm text-gray-500 dark:text-gray-400">
-            {currencyFormat(userData.user_data.cash)}
+            {currencyFormat(cash)}
           </div>
         </div>
       </section>
-      <Tokens tokens={userData.tokens} />
+      {userData.tokens.length > 0 ? (
+        <Tokens tokens={userData.tokens} />
+      ) : (
+        <NoTokens cash={cash} />
+      )}
+    </div>
+  );
+}
+
+function NoTokens({ cash }) {
+  return (
+    <div className="text-center text-2xl">
+      You don't have any tokens, you can{" "}
+      <Link className="text-sky-400 underline" href="/home/buy">
+        buy
+      </Link>{" "}
+      some now using your {currencyFormat(cash)} cash.
     </div>
   );
 }
@@ -35,11 +52,11 @@ export default function Home() {
 function Tokens({ tokens }) {
   let ids = "";
   tokens.forEach((item, i) =>
-    i === 0 ? (ids += item.coinId) : (ids += `%2C${item.coinId}`)
+    i === 0 ? (ids += item.coinId) : (ids += `%2C${item.coinId}`),
   );
   const { data, error, isLoading } = useSWR(
     `https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd&include_24hr_change=true`,
-    (...args) => fetch(...args).then((res) => res.json())
+    (...args) => fetch(...args).then((res) => res.json()),
   );
 
   if (error)
@@ -74,22 +91,22 @@ function Tokens({ tokens }) {
   return (
     <section
       id="user-owned-tokens"
-      className="relative max-w-fit h-full mx-auto overflow-auto"
+      className="relative mx-auto h-full max-w-fit overflow-auto"
     >
       <h3 className="sr-only">Your Tokens:</h3>
-      <table className="h-fit w-fit bg-gray-200 dark:bg-gray-800 rounded-md bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-40 text-sm text-left text-gray-500 dark:text-gray-400">
-        <thead className="text-xs text-gray-700 uppercase bg-opacity-75 bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+      <table className="h-fit w-fit rounded-md bg-gray-200 bg-opacity-40 bg-clip-padding text-left text-sm text-gray-500 backdrop-blur-sm backdrop-filter dark:bg-gray-800 dark:text-gray-400">
+        <thead className="bg-gray-50 bg-opacity-75 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
           <tr>
             <th scope="col" className="px-6 py-3">
               Token Name
             </th>
-            <th scope="col" className="px-6 py-3 hidden sm:block">
+            <th scope="col" className="hidden px-6 py-3 sm:block">
               Current Price
             </th>
             <th scope="col" className="px-6 py-3">
               Quantity
             </th>
-            <th scope="col" className="px-6 py-3 hidden sm:block">
+            <th scope="col" className="hidden px-6 py-3 sm:block">
               Value Now
             </th>
           </tr>
@@ -100,7 +117,7 @@ function Tokens({ tokens }) {
               <tr key={i}>
                 <th
                   scope="row"
-                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                  className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white"
                 >
                   <Link href={`/coin/${token.id}`}>
                     {token.id.toUpperCase()}
@@ -112,12 +129,12 @@ function Tokens({ tokens }) {
                     token.usd_24h_change > 0
                       ? "text-emerald-400"
                       : "text-red-400"
-                  } px-6 py-4 hidden sm:block`}
+                  } hidden px-6 py-4 sm:block`}
                 >
                   {currencyFormat(token.price)}
                 </td>
                 <td className="px-6 py-4">{token.quantity}</td>
-                <td className="px-6 py-4 hidden sm:block">
+                <td className="hidden px-6 py-4 sm:block">
                   {currencyFormat(token.value)}
                 </td>
               </tr>
