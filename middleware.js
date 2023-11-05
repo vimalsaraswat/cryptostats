@@ -1,15 +1,17 @@
 import { NextResponse } from "next/server";
-import { getUser } from "./utils/supabase";
 
 export default async function middleware(request) {
-  const user = await getUser(request);
+  let userLoggedIn = false;
+  if (request.cookies.get("my-refresh-token")) {
+    userLoggedIn = true;
+  }
   const url = request.nextUrl.pathname;
 
-  if (user) {
+  if (userLoggedIn) {
     if (url.startsWith("/auth/login") || url.startsWith("/auth/register")) {
       return NextResponse.rewrite(new URL("/home", request.url));
     }
-  } else if (!user) {
+  } else {
     if (url.startsWith("/home") || url.startsWith("/auth/logout"))
       return NextResponse.rewrite(new URL("/auth/login", request.url));
   }
