@@ -35,17 +35,17 @@ export default function History() {
     );
   else
     return (
-      <div className="my-2 w-full h-full overflow-auto">
-        <h2 className="mb-4 w-fit mx-auto text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400 md:text-5xl lg:text-6xl">
+      <div className="my-2 h-full w-full overflow-auto">
+        <h2 className="mx-auto mb-4 w-fit bg-gradient-to-r from-sky-400 to-emerald-600 bg-clip-text text-3xl font-extrabold text-transparent md:text-5xl lg:text-6xl">
           History
         </h2>
-        <table className="w-fit h-fit py-4 mx-auto overflow-auto bg-gray-200 dark:bg-gray-800 rounded-md bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-40 text-sm text-left text-gray-500 dark:text-gray-400">
-          <thead className="text-xs text-gray-700 uppercase bg-opacity-75 bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+        <table className="mx-auto h-fit w-fit overflow-auto rounded-md bg-gray-200 bg-opacity-40 bg-clip-padding py-4 text-left text-sm text-gray-500 backdrop-blur-sm backdrop-filter dark:bg-gray-800 dark:text-gray-400">
+          <thead className="bg-gray-50 bg-opacity-75 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th scope="col" className="px-6 py-3">
                 Token
               </th>
-              <th scope="col" className="px-6 py-3 hidden sm:block">
+              <th scope="col" className="hidden px-6 py-3 sm:block">
                 Rate
               </th>
               <th scope="col" className="px-6 py-3">
@@ -59,16 +59,16 @@ export default function History() {
           <tbody>
             {transactions?.map((transaction, i) => {
               return (
-                <tr id={i}>
+                <tr key={i}>
                   <th
                     scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                    className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white"
                   >
                     <Link href={`/coin/${transaction.coinId}`}>
                       {transaction.coinId.toUpperCase()}
                     </Link>
                   </th>
-                  <td className="px-6 py-4 hidden sm:block">
+                  <td className="hidden px-6 py-4 sm:block">
                     {currencyFormat(transaction.price)}
                   </td>
                   <td className="px-6 py-4">{transaction.quantity}</td>
