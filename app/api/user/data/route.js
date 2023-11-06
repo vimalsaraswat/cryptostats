@@ -37,7 +37,7 @@ function processTransactions(transactions) {
   return tokens;
 }
 
-export const revalidate = 1;
+export const revalidate = 0;
 
 export async function GET(request) {
   try {
