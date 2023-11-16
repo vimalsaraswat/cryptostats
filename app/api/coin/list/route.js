@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 
-export const revalidate = 24 * 60 * 60;
-
 async function getCoinList() {
-  const res = await fetch("https://api.coingecko.com/api/v3/coins/list");
+  const res = await fetch("https://api.coingecko.com/api/v3/coins/list", {
+    next: { revalidate: 24 * 60 * 60 },
+  });
   const data = await res.json();
 
   return data;
