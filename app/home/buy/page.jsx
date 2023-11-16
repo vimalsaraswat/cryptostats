@@ -37,7 +37,7 @@ export default function Buy() {
 
   useEffect(() => {
     if (showResultsList) {
-      fetch(`http://localhost:3000/api/coin/list?key=${coinId}`)
+      fetch(`/api/coin/list?key=${coinId}`)
         .then((response) => response.text())
         .then((result) => setResultsList(JSON.parse(result).data));
     } else {
