@@ -13,29 +13,51 @@ export default function Buy() {
   const cash = useContext(UserDataContext).user_data.cash;
 
   const [showConfirmation, setShowConfirmation] = useState(false);
-
+  const [resultsList, setResultsList] = useState([]);
   const [coinId, setCoinId] = useState("");
   const [quantity, setQuantity] = useState("");
   const [price, setPrice] = useState(null);
+  const [showResultsList, setShowResultsList] = useState(false);
   const amount = price && quantity ? price * quantity : 0;
 
-  const isInitialRender = useRef(true);
+  const resultsRef = useRef(null);
+
+  // Clicked outside of the search results, hide them
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (resultsRef.current && !resultsRef.current.contains(event.target)) {
+        setShowResultsList(false);
+      }
+    };
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
-    if (isInitialRender.current) {
-      isInitialRender.current = false;
-      return;
+    if (showResultsList) {
+      fetch(`http://localhost:3000/api/coin/list?key=${coinId}`)
+        .then((response) => response.text())
+        .then((result) => setResultsList(JSON.parse(result).data));
+    } else {
+      console.log("searching");
+      setShowResultsList(true);
     }
-
-    const timeoutId = setTimeout(() => {
-      getCurPrice(coinId)
-        .then((value) => setPrice(value))
-        .catch((error) => {
-          console.error(error);
-        });
-    }, 500);
-    return () => clearTimeout(timeoutId);
   }, [coinId]);
+
+  useEffect(() => {
+    if (coinId && quantity) {
+      const timeoutId = setTimeout(() => {
+        getCurPrice(coinId)
+          .then((value) => setPrice(value))
+          .catch((error) => {
+            console.error(error);
+          });
+      }, 500);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [quantity]);
 
   const handleBuy = (e) => {
     e.preventDefault();
@@ -49,6 +71,12 @@ export default function Buy() {
     } else {
       setShowConfirmation(true);
     }
+  };
+
+  const handleCoinSelect = (selectedCoinId) => {
+    setShowResultsList(false);
+    setResultsList([]);
+    setCoinId(selectedCoinId);
   };
 
   if (showConfirmation) {
@@ -68,32 +96,59 @@ export default function Buy() {
       <form
         onSubmit={handleBuy}
         autoComplete="off"
-        className="max-w-2xl mx-auto"
+        className="mx-auto max-w-2xl"
       >
         <fieldset className="mb-6">
           <label
             htmlFor="token"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
           >
             Token
           </label>
           <input
-            onChange={(e) => {
-              setCoinId(e.target.value);
-            }}
+            onChange={(e) => setCoinId(e.target.value)}
             value={coinId}
             autoFocus
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
             name="token"
             placeholder="Symbol"
             type="text"
             required
           />
         </fieldset>
+        {showResultsList && (
+          <div
+            ref={resultsRef}
+            id="search-resuts"
+            className="relative h-0 w-full"
+          >
+            {resultsList.length > 0 && (
+              <ul className="absolute left-0 top-0 flex h-fit max-h-60 flex-col overflow-y-scroll rounded-lg border border-gray-100 bg-gray-50 p-4 font-medium  dark:border-gray-700 dark:bg-gray-800">
+                {resultsList.map((result, i) => {
+                  return (
+                    <li key={i} className="w-48 pb-3 last:pb-0 sm:pb-4">
+                      <button
+                        onClick={() => handleCoinSelect(result.id)}
+                        className="flex w-full items-center justify-between space-x-4"
+                      >
+                        <p className="truncate text-sm font-medium text-gray-900 dark:text-white">
+                          {result.name}
+                        </p>
+                        <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                          {result.symbol}
+                        </div>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </div>
+        )}
         <fieldset className="mb-6">
           <label
             htmlFor="coins"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
           >
             Quantity
           </label>
@@ -102,7 +157,7 @@ export default function Buy() {
             value={quantity}
             min={1e-5}
             step={1e-5}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
             name="coins"
             placeholder="Quantity"
             type="number"
@@ -110,7 +165,7 @@ export default function Buy() {
           />
         </fieldset>
         {price && quantity && (
-          <p className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+          <p className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
             Amount:{" "}
             <span className="text-base font-bold">
               {currencyFormat(amount)}
@@ -119,7 +174,7 @@ export default function Buy() {
         )}
         <button
           type="submit"
-          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          className="w-full rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 sm:w-auto"
         >
           Buy
         </button>
@@ -153,11 +208,11 @@ function ConfirmBuy(props) {
 
     if (response.ok) {
       props.addToast("success", "Transaction successful!");
-      router.push("/home");
+      router.push("/home?r=true");
     } else {
       props.addToast(
         "error",
-        (await response.json()).message || "Something went wrong!"
+        (await response.json()).message || "Something went wrong!",
       );
       props.setShowConfirmation(false);
     }
@@ -177,7 +232,7 @@ function ConfirmBuy(props) {
         <button
           type="submit"
           onClick={handleConfirmBuy}
-          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          className="w-full rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 sm:w-auto"
         >
           Confirm Payment
         </button>
