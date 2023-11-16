@@ -11,13 +11,17 @@ export function useToast() {
 export function ToastProvider({ children }) {
   const [toasts, setToasts] = useState(() => {
     // Retrieve stored toasts from localStorage when the app starts
-    const storedToasts = JSON.parse(localStorage.getItem("toasts")) || [];
+    const storedToasts =
+      typeof window !== "undefined"
+        ? JSON.parse(localStorage.getItem("toasts"))
+        : [];
     return storedToasts;
   });
 
   useEffect(() => {
     // Save toasts to localStorage whenever they change
-    localStorage.setItem("toasts", JSON.stringify(toasts));
+    typeof window !== "undefined" &&
+      localStorage.setItem("toasts", JSON.stringify(toasts));
   }, [toasts]);
 
   const addToast = (type, message, duration = 5, onRemove = null) => {
