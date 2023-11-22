@@ -9,7 +9,10 @@ export default function Footer() {
             <a href="/" className="hover:underline">
               CryptoStats™
             </a>
-            . All Rights Reserved.
+            . No Rights Reserved
+            <span className="hidden sm:inline-block">
+              , because life's too short to be serious.
+            </span>
           </span>
           <div className="mt-4 flex space-x-5 text-gray-600 dark:text-gray-500 sm:mt-0 sm:justify-center">
             {/* <a href="#" className="hover:text-gray-900 dark:hover:text-white">
