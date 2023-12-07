@@ -10,11 +10,12 @@ export function useToast() {
 
 export function ToastProvider({ children }) {
   const [toasts, setToasts] = useState(() => {
+    let storedToasts = [];
     // Retrieve stored toasts from localStorage when the app starts
-    const storedToasts =
-      typeof window !== "undefined"
-        ? JSON.parse(localStorage.getItem("toasts"))
-        : [];
+    if (typeof window !== "undefined") {
+      localStorage.getItem("toasts") &&
+        (storedToasts = JSON.parse(localStorage.getItem("toasts")));
+    }
     return storedToasts;
   });
 
