@@ -5,6 +5,7 @@ import Link from "next/link";
 import searchCoin from "./searchCoin";
 import Loading from "@/components/loading";
 import { SearchIcon } from "@/components/icons";
+import Input from "@/components/Input";
 
 export default function Search() {
   const [loading, setLoading] = useState(false);
@@ -57,7 +58,7 @@ export default function Search() {
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
             <SearchIcon />
           </div>
-          <input
+          <Input
             onChange={(event) => {
               setQuery(event.target.value);
             }}
@@ -69,7 +70,7 @@ export default function Search() {
             value={query}
             type="text"
             id="search-navbar"
-            className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2 px-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+            className="p-2 px-10"
             placeholder="Coin Search..."
           />
           {loading ? (
