@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Loading from "@/components/loading";
 import { useToast } from "@/utils/ToastContext";
+import Input from "@/components/Input";
 
 export default function Register() {
   const router = useRouter();
@@ -41,7 +42,7 @@ export default function Register() {
       addToast(
         "error",
         (await response.json()).message ||
-          "Something went wrong, please try again!"
+          "Something went wrong, please try again!",
       );
     }
   };
@@ -56,56 +57,53 @@ export default function Register() {
       <form
         onSubmit={handleRegister}
         autoComplete="off"
-        className="max-w-2xl mx-auto"
+        className="mx-auto max-w-2xl"
       >
         <fieldset className="mb-6">
           <label
             htmlFor="username"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
           >
             Username
           </label>
-          <input
+          <Input
             name="username"
             id="username"
             onChange={(e) => setUsername(e.target.value)}
             value={username}
             type="text"
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             required
           />
         </fieldset>
         <fieldset className="mb-6">
           <label
             htmlFor="email"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
           >
             Your email id
           </label>
-          <input
+          <Input
             name="email"
             id="email"
             onChange={(e) => setEmail(e.target.value)}
             value={email}
             type="email"
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             required
           />
         </fieldset>
         <fieldset className="mb-6">
           <label
             htmlFor="password"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
           >
             Your password
           </label>
-          <input
+          <Input
             type="password"
             name="password"
             id="password"
             onChange={(e) => setPassword(e.target.value)}
             value={password}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             required
           />
         </fieldset>
@@ -114,17 +112,17 @@ export default function Register() {
         ) : (
           <button
             type="submit"
-            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            className="w-full rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 sm:w-auto"
           >
             Submit
           </button>
         )}
       </form>
-      <p className="flex flex-col my-4">
+      <p className="my-4 flex flex-col">
         <span>Already have an account?</span>
         <Link
           href={"/auth/login"}
-          className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+          className="font-medium text-blue-600 hover:underline dark:text-blue-500"
         >
           Login Now
         </Link>

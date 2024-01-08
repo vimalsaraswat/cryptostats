@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Loading from "@/components/loading";
 import { useToast } from "@/utils/ToastContext";
+import Input from "@/components/Input";
 
 export default function Login() {
   const router = useRouter();
@@ -45,7 +46,7 @@ export default function Login() {
     <>
       <form
         onSubmit={handleLogIn}
-        className="flex max-w-2xl flex-col items-center"
+        className="mx-auto max-w-2xl"
         autoComplete="off"
       >
         <fieldset className="mb-6">
@@ -55,13 +56,12 @@ export default function Login() {
           >
             Your email id
           </label>
-          <input
+          <Input
             type="email"
             name="email"
             id="email"
             onChange={(e) => setEmail(e.target.value)}
             value={email}
-            className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
             required
           />
         </fieldset>
@@ -72,13 +72,12 @@ export default function Login() {
           >
             Your password
           </label>
-          <input
+          <Input
             type="password"
             name="password"
             id="password"
             onChange={(e) => setPassword(e.target.value)}
             value={password}
-            className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
             required
           />
         </fieldset>
