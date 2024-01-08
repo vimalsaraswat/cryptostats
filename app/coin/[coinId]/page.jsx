@@ -2,22 +2,26 @@
 
 import { useState, useEffect } from "react";
 import { currencyFormat } from "@/helpers";
-import { getCurPrice, getCoinData, getCoinChartData } from "@/app/coin";
+import { getCoinData, getCoinChartData } from "@/app/coin";
 import PriceChart from "@/components/ui/priceChart";
 import Loading from "@/components/loading";
 
 export default function Coin({ params }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [coinData, setCoinData] = useState(null);
   const [price, setPrice] = useState(null);
-  const [coinData, setCoinData] = useState({});
+
   const coin = params.coinId;
 
   useEffect(() => {
-    Promise.all([
-      getCurPrice(coin).then((value) => setPrice(value)),
-      getCoinData(coin).then((value) => setCoinData(JSON.parse(value))),
-    ])
+    getCoinData(coin)
+      .then((value) => {
+        const data = JSON.parse(value);
+        setCoinData(data);
+        setPrice(data.market_data.current_price.usd);
+      })
+
       .catch((error) => {
         console.error(error);
         setError(true);
@@ -34,7 +38,6 @@ export default function Coin({ params }) {
         Try refreshing after some time.
       </p>
     );
-
   return (
     <>
       {price ? (
