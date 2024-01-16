@@ -4,13 +4,7 @@ export default function Footer() {
       <div className="mx-auto w-full max-w-screen-xl px-4 pb-4 lg:pb-8">
         <hr className="mb-6 border-gray-200 dark:border-gray-700 sm:mx-auto lg:mb-8" />
         <div className="sm:flex sm:items-center sm:justify-between">
-          <span className="text-sm text-gray-800 dark:text-gray-400 sm:text-center">
-            © 2023{" "}
-            <a href="/" className="hover:underline">
-              CryptoStats™
-            </a>
-            . No Rights Reserved
-          </span>
+          <CopyrightStatement />
           <div className="mt-4 flex space-x-5 text-gray-600 dark:text-gray-500 sm:mt-0 sm:justify-center">
             <a
               href="https://twitter.com/vimalsaraswat00"
@@ -76,5 +70,17 @@ export default function Footer() {
         </div>
       </div>
     </footer>
+  );
+}
+
+function CopyrightStatement() {
+  return (
+    <span className="text-sm text-gray-800 dark:text-gray-400 sm:text-center">
+      © {new Date().getFullYear()}{" "}
+      <a href="/" className="hover:underline">
+        CryptoStats™
+      </a>
+      . No Rights Reserved
+    </span>
   );
 }
