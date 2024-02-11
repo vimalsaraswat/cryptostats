@@ -1,50 +1,41 @@
-"use client";
+import { createClient } from "@/utils/supabase/server";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useToast } from "@/utils/ToastContext";
-import Loading from "@/components/loading";
+const cookieStore = cookies();
+const supabase = createClient(cookieStore);
 
-export default function Login() {
-  const router = useRouter();
-  const { addToast } = useToast();
+export default async function Login() {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  const [loading, setLoading] = useState(false);
+  if (!user) redirect("/login");
 
-  const handleLogOut = async () => {
-    setLoading(true);
-    const response = await fetch("/api/auth/logout", {
-      method: "POST",
-    }).finally(() => setLoading(false));
+  const signOut = async () => {
+    "use server";
 
-    if (response.ok) {
-      addToast("success", "Logged out successfully!");
-      addToast("error", "But I will miss you🥺", 8);
-      router.refresh();
-    } else {
-      addToast("error", "Something went wrong, please try again!");
-    }
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    return redirect("/auth/login");
   };
 
   return (
-    <div className="h-full w-full flex items-center justify-center">
-      <div className="max-w-2xl mx-auto">
-        <p className="block mb-6 text-lg font-medium text-gray-900 dark:text-white">
+    <div className="flex h-full w-full items-center justify-center">
+      <div className="mx-auto max-w-2xl">
+        <p className="mb-6 block text-lg font-medium text-gray-900 dark:text-white">
           So you decided to leave me, Huh!
           <br />
-          Think again before its too late.
+          Please think again .
         </p>
-        {loading ? (
-          <Loading />
-        ) : (
+        <form action={signOut}>
           <button
             type="submit"
-            onClick={handleLogOut}
-            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            className="w-full rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 sm:w-auto"
           >
-            LogOut
+            Logout
           </button>
-        )}
+        </form>
       </div>
     </div>
   );
