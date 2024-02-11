@@ -1,5 +1,6 @@
 import { initSupabase, getUser } from "@/utils/supabase";
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 
 export async function POST(req) {
   const supabase = await initSupabase(req);
@@ -16,7 +17,7 @@ export async function POST(req) {
   if (!transactions) {
     return NextResponse.json(
       { message: `Insufficient token balance!` },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -36,7 +37,7 @@ export async function POST(req) {
   if (quantityAvailable < quantity) {
     return NextResponse.json(
       { message: `Insufficient token balance!` },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -51,7 +52,7 @@ export async function POST(req) {
   if (!cashUpdated) {
     return NextResponse.json(
       { message: `Transaction Failed!` },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -69,16 +70,17 @@ export async function POST(req) {
     .select();
 
   if (transaction) {
+    revalidatePath("/");
     return NextResponse.json(
       { message: `Transaction Successful!` },
-      { status: 200 }
+      { status: 200 },
     );
   } else {
     return NextResponse.json(
       { message: `Transaction Failed!` },
       {
         status: 400,
-      }
+      },
     );
   }
 }

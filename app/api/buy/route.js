@@ -1,5 +1,6 @@
 import { initSupabase, getUser } from "@/utils/supabase";
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 
 export async function POST(req) {
   const supabase = await initSupabase(req);
@@ -14,7 +15,7 @@ export async function POST(req) {
       { message: `Insufficient cash balance!` },
       {
         status: 400,
-      }
+      },
     );
   }
 
@@ -31,7 +32,7 @@ export async function POST(req) {
       { message: `Transaction Failed!` },
       {
         status: 400,
-      }
+      },
     );
   }
 
@@ -53,12 +54,13 @@ export async function POST(req) {
       { message: `Transaction Failed!` },
       {
         status: 400,
-      }
+      },
     );
   }
 
+  revalidatePath("/");
   return NextResponse.json(
     { message: `Transaction Successful!` },
-    { status: 200 }
+    { status: 200 },
   );
 }
