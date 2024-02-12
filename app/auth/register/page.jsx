@@ -1,77 +1,59 @@
-"use client";
-
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
-import Loading from "@/components/loading";
-import { useToast } from "@/utils/ToastContext";
+import { headers } from "next/headers";
+import { createClient } from "@/utils/supabase/server";
+import { redirect } from "next/navigation";
 import Input from "@/components/Input";
 
-export default function Register() {
-  const router = useRouter();
-  const { addToast } = useToast();
+export default function Register({ searchParams }) {
+  const signUp = async (formData) => {
+    "use server";
 
-  const [loading, setLoading] = useState(false);
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+    const origin = headers().get("origin");
+    const email = formData.get("email");
+    const password = formData.get("password");
+    const username = formData.get("username");
+    const supabase = createClient();
 
-  const handleRegister = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.signUp({
+      email,
+      password,
+    });
 
-    const user = {
-      username: username,
-      email: email,
-      password: password,
-    };
-
-    let response = await fetch("/api/auth/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(user),
-    }).finally(() => setLoading(false));
-
-    if (response.ok) {
-      addToast("success", "Account created Successfully!");
-      addToast("success", "Please Login to proceed", 8);
-      router.push("/auth/login");
-    } else {
-      addToast(
-        "error",
-        (await response.json()).message ||
-          "Something went wrong, please try again!",
-      );
+    if (error) {
+      return redirect("/auth/login?message=Could not authenticate user");
     }
+
+    await supabase
+      .from("user_data")
+      .insert([{ user_id: user.id, username: username }])
+      .select();
+
+    return redirect(
+      "/auth/login?message=User successfully registered, please login to continue",
+    );
   };
 
   return (
-    <>
-      <p className="mb-6 text-center text-lg font-medium text-gray-900 dark:text-white">
-        Welcome! Join the party,
-        <br />
-        it's just a click away.😄
-      </p>
+    <div className="flex w-full flex-1 flex-col justify-center gap-2 px-8 sm:max-w-md">
       <form
-        onSubmit={handleRegister}
-        autoComplete="off"
-        className="mx-auto max-w-2xl"
+        className="animate-in text-foreground flex w-full flex-1 flex-col justify-center gap-2"
+        action={signUp}
       >
         <fieldset className="mb-6">
           <label
             htmlFor="username"
             className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
           >
-            Username
+            Name
           </label>
           <Input
             name="username"
             id="username"
-            onChange={(e) => setUsername(e.target.value)}
-            value={username}
             type="text"
+            placeholder="Your Name"
             required
           />
         </fieldset>
@@ -83,11 +65,10 @@ export default function Register() {
             Your email id
           </label>
           <Input
+            type="email"
             name="email"
             id="email"
-            onChange={(e) => setEmail(e.target.value)}
-            value={email}
-            type="email"
+            placeholder="you@example.com"
             required
           />
         </fieldset>
@@ -102,31 +83,33 @@ export default function Register() {
             type="password"
             name="password"
             id="password"
-            onChange={(e) => setPassword(e.target.value)}
-            value={password}
+            placeholder="••••••••"
             required
           />
         </fieldset>
-        {loading ? (
-          <Loading />
-        ) : (
-          <button
-            type="submit"
-            className="w-full rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 sm:w-auto"
-          >
-            Submit
-          </button>
-        )}
-      </form>
-      <p className="my-4 flex flex-col">
-        <span>Already have an account?</span>
-        <Link
-          href={"/auth/login"}
-          className="font-medium text-blue-600 hover:underline dark:text-blue-500"
+        <button
+          type="submit"
+          className="w-full rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 sm:w-auto dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
         >
-          Login Now
-        </Link>
-      </p>
-    </>
+          Register
+        </button>
+
+        {searchParams?.message && (
+          <p className="bg-foreground/10 text-foreground mt-4 p-4 text-center">
+            {searchParams.message}
+          </p>
+        )}
+
+        <p className="my-4 flex flex-col">
+          <span>Already have an account?</span>
+          <Link
+            href={"/auth/login"}
+            className="font-medium text-blue-600 hover:underline dark:text-blue-500"
+          >
+            Login Now
+          </Link>
+        </p>
+      </form>
+    </div>
   );
 }
