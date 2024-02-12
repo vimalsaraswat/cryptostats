@@ -1,31 +1,16 @@
-"use client";
-
-import { useState, useEffect } from "react";
+import { createClient } from "@/utils/supabase/server";
+import { DateTime } from "luxon";
 import Link from "next/link";
 import { currencyFormat } from "@/helpers";
-import { DateTime } from "luxon";
-import Loading from "@/components/loading";
 
-export default function History() {
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-  const [transactions, setTransactions] = useState(null);
+export default async function History() {
+  const supabase = createClient();
 
-  useEffect(() => {
-    fetch("/api/user/transactions")
-      .then((response) => response.text())
-      .then((result) => {
-        setTransactions(JSON.parse(result).data);
-      })
-      .catch((error) => {
-        console.error(error);
-        setError(true);
-      })
-      .finally(() => setLoading(false));
-  }, []);
+  let { data: transactions, error } = await supabase
+    .from("transactions")
+    .select("*");
 
-  if (loading) return <Loading type="large" />;
-  else if (error)
+  if (error)
     return (
       <>
         Something went wrong,
