@@ -1,12 +1,9 @@
 import { createClient } from "@/utils/supabase/server";
-import { cookies } from "next/headers";
 import Logo from "@/components/logo";
 import Nav from "@/components/nav";
 
-const cookieStore = cookies();
-const supabase = createClient(cookieStore);
-
 export default async function Header() {
+  const supabase = createClient();
   const session = (await supabase.auth.getSession()).data.session;
 
   return (

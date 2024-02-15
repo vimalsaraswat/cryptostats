@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { createClient } from "@/utils/supabase/server";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import Input from "@/components/Input";
 
 export default function Login({ searchParams }) {
   const signIn = async (formData) => {
     "use server";
-    console.log(formData);
+
     const email = formData.get("email");
     const password = formData.get("password");
     const supabase = createClient();
@@ -20,7 +21,8 @@ export default function Login({ searchParams }) {
       return redirect("/auth/login?message=Could not authenticate user");
     }
 
-    return redirect("/");
+    revalidatePath("/");
+    return redirect("/home");
   };
 
   return (
