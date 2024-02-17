@@ -4,7 +4,7 @@ import Link from "next/link";
 import { currencyFormat } from "@/helpers";
 
 export default async function History() {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   let { data: transactions, error } = await supabase
     .from("transactions")

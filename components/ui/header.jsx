@@ -3,7 +3,7 @@ import Logo from "@/components/logo";
 import Nav from "@/components/nav";
 
 export default async function Header() {
-  const supabase = createClient();
+  const supabase = await createClient();
   const session = (await supabase.auth.getSession()).data.session;
 
   return (

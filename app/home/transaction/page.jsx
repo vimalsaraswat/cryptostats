@@ -24,7 +24,7 @@ export default async function Page({ searchParams }) {
 
   const handleTransaction = async () => {
     "use server";
-    const supabase = createClient();
+    const supabase = await createClient();
     const user = (await supabase.auth.getUser()).data.user;
 
     // Update user's cash

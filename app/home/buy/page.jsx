@@ -2,7 +2,7 @@ import Form from "@/components/forms/buy";
 import { createClient } from "@/utils/supabase/server";
 
 export default async function Buy({ searchParams }) {
-  const supabase = createClient();
+  const supabase = await createClient();
   const cash = (await supabase.from("user_data").select("cash")).data[0].cash;
 
   const query = searchParams?.query || "";

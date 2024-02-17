@@ -12,7 +12,7 @@ export default function Register({ searchParams }) {
     const email = formData.get("email");
     const password = formData.get("password");
     const username = formData.get("username");
-    const supabase = createClient();
+    const supabase = await createClient();
 
     const {
       data: { user },

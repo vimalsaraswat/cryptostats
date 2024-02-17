@@ -10,7 +10,7 @@ export default function Login({ searchParams }) {
 
     const email = formData.get("email");
     const password = formData.get("password");
-    const supabase = createClient();
+    const supabase = await createClient();
 
     const { error } = await supabase.auth.signInWithPassword({
       email,
