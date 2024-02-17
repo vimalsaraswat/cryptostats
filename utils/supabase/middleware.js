@@ -62,7 +62,7 @@ export const createClient = (request) => {
 
 export const updateSession = async (request) => {
   const { supabase, response } = createClient(request);
-  const user = await supabase.auth.getUser();
+  const user = (await supabase.auth.getUser()).data.user;
 
   const url = request.nextUrl.pathname;
 
