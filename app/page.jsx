@@ -1,9 +1,8 @@
 import { createClient } from "@/utils/supabase/server";
 import Link from "next/link";
 
-const supabase = createClient();
-
 export default async function Home() {
+  const supabase = await createClient();
   const { data } = await supabase.from("user_data").select("*");
   const user = data[0];
 
