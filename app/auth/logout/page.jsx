@@ -12,7 +12,7 @@ export default async function LogOut() {
 
   const signOut = async () => {
     "use server";
-
+    const supabase = await createClient();
     await supabase.auth.signOut();
 
     revalidatePath("/");
