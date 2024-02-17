@@ -1,43 +1,25 @@
-import { createClient } from "@/utils/supabase/server";
 import Link from "next/link";
 import { currencyFormat } from "@/helpers";
 import { TokensTable } from "@/components/table";
+import { getUserData, getUserTokens } from "@/lib/supabase";
 
 async function getUserDataAndTransactions() {
-  const supabase = createClient();
-
-  const results = await Promise.allSettled([
-    supabase.from("user_data").select("*"),
-    supabase.from("transactions").select("coinId,quantity"),
-  ]);
-
+  const results = await Promise.allSettled([getUserData(), getUserTokens()]);
   const errors = results.filter((res) => res.status !== "fulfilled");
 
   if (errors.length > 0) {
     return null;
   }
-  return results.map((res) => res.value.data);
-}
-
-function processTransactions(transactions) {
-  const tokens = Object.values(
-    transactions.reduce((acc, item) => {
-      const { coinId, quantity } = item;
-      acc[coinId] = acc[coinId] || { coinId, quantity: 0 };
-      acc[coinId].quantity += quantity;
-      return acc;
-    }, {}),
-  ).filter((item) => item.quantity !== 0);
-
-  return tokens;
+  return results.map((res) => res.value);
 }
 
 export default async function Home() {
-  const [user_data, transactions] = await getUserDataAndTransactions();
-  const tokens = processTransactions(transactions);
-  const userData = user_data[0];
+  const [userData, tokens] = await getUserDataAndTransactions();
   const cash = userData.cash;
-  console.log(userData);
+
+  const filteredTokens = Array.from(tokens, ([key, value]) => {
+    return { coinId: key, quantity: value };
+  }).filter((item) => item.quantity !== 0);
 
   return (
     <div className="h-full w-full grow overflow-y-scroll">
@@ -57,8 +39,8 @@ export default async function Home() {
           </div>
         </div>
       </section>
-      {tokens.length > 0 ? (
-        <TokensTable tokens={tokens} />
+      {filteredTokens.length > 0 ? (
+        <TokensTable tokens={filteredTokens} />
       ) : (
         <NoTokens cash={cash} />
       )}
