@@ -1,32 +1,34 @@
-import { cookies } from "next/headers";
+import { createClient } from "@/utils/supabase/server";
 import Link from "next/link";
 
-export default function Home() {
-  let userLoggedIn = false;
-  if (cookies().get("my-refresh-token")) {
-    userLoggedIn = true;
-  }
-  return (
-    <>
-      <Hero userLoggedIn={userLoggedIn} />
-    </>
-  );
+const supabase = createClient();
+
+export default async function Home() {
+  const { data } = await supabase.from("user_data").select("*");
+  const user = data[0];
+
+  return <Hero user={user} />;
 }
 
-function Hero({ userLoggedIn }) {
+function Hero({ user }) {
   return (
     <section className="px-8 text-black dark:text-white">
       <div className="mx-auto max-w-4xl">
         <h2 className="mb-4 text-4xl font-bold tracking-wide md:text-6xl">
+          {!!user && (
+            <span>
+              Hello, {user.username}
+              <br />
+            </span>
+          )}
           Welcome to CryptoStats
         </h2>
         <p className="mb-8 text-lg md:text-xl">
           Elevate your trading skills with real-time market data. Stay ahead of
           the game with our powerful analytics.
           <br /> No financial risk, just pure practice.
-        </p>
-
-        {userLoggedIn ? (
+        </p>{" "}
+        {!!user ? (
           <div className="flex space-x-4">
             <Link
               className="transform rounded-lg bg-blue-500 px-6 py-3 text-lg text-white transition-transform hover:scale-105 hover:bg-blue-600"
