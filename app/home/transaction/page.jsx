@@ -3,10 +3,14 @@ import { getUserData, getUserTokens } from "@/lib/supabase";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { getCurPrice } from "@/app/coin";
+import { currencyFormat } from "@/helpers";
 
 export default async function Page({ searchParams }) {
   const { coinId, price, quantity } = searchParams;
   const amount = price * quantity;
+
+  const newPrice = await getCurPrice(coinId);
 
   const results = await Promise.allSettled([getUserData(), getUserTokens()]);
   const [userData, tokens] = results.map((res) => res.value);
@@ -54,7 +58,7 @@ export default async function Page({ searchParams }) {
     return redirect("/home");
   };
 
-  if (!(coinId && price && quantity))
+  if (!(coinId && price && quantity && newPrice && newPrice === price))
     return (
       <p>
         Invalid data
@@ -67,8 +71,8 @@ export default async function Page({ searchParams }) {
   return (
     <section>
       <div>
-        Please confirm that you want to {quantity > 0 ? "buy" : "sell"}{" "}
-        {Math.abs(quantity)} for {Math.abs(amount)}.
+        Please confirm that you want to {quantity > 0 ? "buy" : "sell"} {coinId}
+        {Math.abs(quantity)} for {currencyFormat(Math.abs(amount))}.
         <form
           className="flex flex-col justify-center"
           action={handleTransaction}
