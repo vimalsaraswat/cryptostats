@@ -8,10 +8,20 @@ import { currencyFormat } from "@/helpers";
 
 export default async function Page({ searchParams }) {
   const { coinId, price, quantity } = searchParams;
-  const amount = price * quantity;
-
   const newPrice = await getCurPrice(coinId);
 
+  if (!(coinId && price && quantity && newPrice)) {
+    return (
+      <p>
+        Invalid data
+        <br />
+        Please try again.
+        <BackButton />
+      </p>
+    );
+  }
+
+  const amount = newPrice * quantity;
   const results = await Promise.allSettled([getUserData(), getUserTokens()]);
   const [userData, tokens] = results.map((res) => res.value);
 
@@ -57,17 +67,6 @@ export default async function Page({ searchParams }) {
     revalidatePath("/home");
     return redirect("/home");
   };
-
-  if (!(coinId && price && quantity && newPrice && newPrice == price)) {
-    return (
-      <p>
-        Invalid data
-        <br />
-        Please try again.
-        <BackButton />
-      </p>
-    );
-  }
 
   return (
     <section>
