@@ -1,4 +1,4 @@
-import { BackButton } from "@/components/button";
+import { BackButton, SubmitButton } from "@/components/button";
 import { getUserData, getUserTokens } from "@/lib/supabase";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
@@ -58,7 +58,7 @@ export default async function Page({ searchParams }) {
     return redirect("/home");
   };
 
-  if (!(coinId && price && quantity && newPrice && newPrice === price))
+  if (!(coinId && price && quantity && newPrice && newPrice == price)) {
     return (
       <p>
         Invalid data
@@ -67,6 +67,7 @@ export default async function Page({ searchParams }) {
         <BackButton />
       </p>
     );
+  }
 
   return (
     <section>
@@ -77,12 +78,7 @@ export default async function Page({ searchParams }) {
           className="flex flex-col justify-center"
           action={handleTransaction}
         >
-          <button
-            type="submit"
-            className="mt-5 rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 sm:w-auto dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          >
-            Confirm Payment
-          </button>
+          <SubmitButton text="Confirm Payment" />
         </form>
       </div>
     </section>
