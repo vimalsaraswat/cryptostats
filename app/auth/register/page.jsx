@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import Input from "@/components/Input";
+import { SubmitButton } from "@/components/button";
 
 export default function Register({ searchParams }) {
   const signUp = async (formData) => {
@@ -87,12 +88,7 @@ export default function Register({ searchParams }) {
             required
           />
         </fieldset>
-        <button
-          type="submit"
-          className="w-full rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 sm:w-auto dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-        >
-          Register
-        </button>
+        <SubmitButton text="Register" />
 
         {searchParams?.message && (
           <p className="bg-foreground/10 text-foreground mt-4 p-4 text-center">
