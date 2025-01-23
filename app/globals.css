@@ -1,6 +1,28 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@plugin "daisyui";
+
+@theme {
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+}
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+        border-color: var(--color-gray-200, currentColor);
+    }
+}
 
 :root {
     --background: #ffffff;
@@ -16,6 +38,7 @@
 
 body {
     color: var(--foreground);
-    /* background: var(--background); */
     font-family: Arial, Helvetica, sans-serif;
+    @apply bg-[conic-gradient(at_left,_var(--tw-gradient-stops))] from-indigo-100 via-slate-400 to-indigo-100
+        dark:bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] dark:from-gray-700 dark:via-gray-900 dark:to-black;
 }
