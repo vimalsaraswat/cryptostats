@@ -7,6 +7,7 @@ export default defineConfig({
   schema: "./db/schema.ts",
   out: "./migrations",
   dialect: "postgresql",
+  tablesFilter: ["cryptostats_*"],
   dbCredentials: {
     url: process.env.DATABASE_URL!,
   },
