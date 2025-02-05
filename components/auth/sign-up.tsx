@@ -1,13 +1,14 @@
 "use client";
 
 import { signUpUser } from "@/actions/user";
+import Link from "next/link";
 import { useActionState } from "react";
 
 export function SignUp() {
   const [state, formAction, isPending] = useActionState(signUpUser, null);
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-background/60 rounded-lg shadow-md">
+    <div className="w-full p-6 bg-background/60 rounded-lg shadow-md space-y-6">
       <form action={formAction} className="space-y-4">
         <div>
           <label htmlFor="name" className="label">
@@ -67,6 +68,12 @@ export function SignUp() {
           </div>
         )}
       </form>
+      <p className="text-center">
+        Already have an account?{" "}
+        <Link href="/sign-in" className="link">
+          Sign in
+        </Link>
+      </p>
     </div>
   );
 }
